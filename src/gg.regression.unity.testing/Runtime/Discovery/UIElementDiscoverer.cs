@@ -88,7 +88,6 @@ namespace RegressionGames.Unity.Discovery
                     new PointerEventData(EventSystem.current),
                     (h, d) => h.OnPointerClick((PointerEventData)d));
             }
-
         }
     }
 }
