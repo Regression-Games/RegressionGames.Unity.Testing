@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+#/ Usage: script/bootstrap
+#/ Prepares the repository for usage. Run this after you clone, and then again at any time to update dependencies.
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+repo_root="$(cd "${script_dir}/.." && pwd)"
+cd "${repo_root}"
+
+[ "${DEBUG:-false}" == 'true' ] && set -x
+set -euo pipefail
+
+source "${script_dir}/_utils.sh"
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    key="$1"
+    shift
+    case "$key" in
+        --help)
+            grep '^#/' "$0" | cut -c4-
+            exit 0
+            ;;
+        -*)
+            echo "Unknown option: $key"
+            exit 1
+            ;;
+        *)
+            echo "Unknown argument: $key"
+            exit 1
+            ;;
+    esac
+done
+
+# Check that we have the right version of Unity
+unity_version=$(get_unity_version "$repo_root/src/UnityHostGame")
+echo "Checking for Unity version $unity_version"
+
+unity_path=$(get_unity_path "$unity_version")
+if [ ! -d "$unity_path" ]; then
+    echo "Unity $unity_version not found. Please install it from the Unity Hub."
+    exit 1
+fi
+
+echo "Found Unity $unity_version at $unity_path"

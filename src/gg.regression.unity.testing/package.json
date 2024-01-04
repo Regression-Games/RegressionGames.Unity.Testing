@@ -1,0 +1,15 @@
+{
+    "name": "gg.regression.unity.testing",
+    "version": "0.0.1",
+    "description": "Regression Games Unity Testing SDK",
+    "displayName": "Regression Games Unity Testing SDK",
+    "unity": "2021.3",
+    "unityRelease": "24f1",
+    "author": {
+        "name": "Regression Games Inc",
+        "email": "info@regression.gg",
+        "url": "https://regression.gg"
+    },
+    "dependencies": {
+    }
+}

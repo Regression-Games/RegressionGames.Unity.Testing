@@ -1,0 +1,135 @@
+#!/bin/bash
+#/ Usage: scripts/build [--unity-path <path>] [--skip-edit-mode] [--skip-play-mode] [--category <category>] [--out <output_path>]
+#/ Builds the Unity project.
+#/
+#/ Options:
+#/   -u, --unity-path <path>    Path to the Unity installation to use. Defaults to an autodetected path based on the version of RGUnityBots.
+#/   --skip-edit-mode           Skip running the Edit mode tests.
+#/   --skip-play-mode           Skip running the Play mode tests.
+#/   --category <category>      Run only tests in the given category. Defaults to all categories.
+#/   --out <output_path>        Path to write the test results to. Defaults to "artifacts/test-results.xml".
+source_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+repo_root="$(dirname "$source_dir")"
+source "$repo_root/script/_utils.sh"
+
+set -euo pipefail
+
+# Parse arguments
+unity_path=
+edit_mode=true
+play_mode=true
+category=
+artifact_dir="$repo_root/artifacts"
+test_output="$artifact_dir/test-results.xml"
+while [[ $# -gt 0 ]]; do
+    key="$1"
+    shift
+    case "$key" in
+        -u|--unity-path)
+            unity_path="$1"
+            shift
+            ;;
+        --skip-edit-mode)
+            edit_mode=false
+            ;;
+        --skip-play-mode)
+            play_mode=false
+            ;;
+        --category)
+            category="$1"
+            shift
+            ;;
+        --out)
+            test_output="$1"
+            shift
+            ;;
+        --help)
+            grep '^#/' "$0" | cut -c4-
+            exit 0
+            ;;
+        -*)
+            echo "Unknown option: $key"
+            exit 1
+            ;;
+        *)
+            echo "Unknown argument: $key"
+            exit 1
+            ;;
+    esac
+done
+
+if [ -z "$unity_path" ]; then
+    unity_path=$(get_unity_path "$(get_unity_version "$repo_root/src/RGUnityBots")")
+fi
+
+if [ ! -d "$(basename $test_output)" ]; then
+    mkdir -p "$(basename $test_output)"
+fi
+
+if [ -n "$category" ]; then
+    category="-category $category"
+fi
+
+play_mode_passed=true
+edit_mode_passed=true
+
+play_mode_out="${test_output/.xml/.playmode.xml}"
+edit_mode_out="${test_output/.xml/.editmode.xml}"
+
+if $play_mode; then
+    echo "Using Unity at $unity_path to run Play Mode tests..."
+    if ! unity "$unity_path" \
+        -projectPath "$repo_root/src/RGUnityBots" \
+        -testPlatform PlayMode \
+        -runTests \
+        $category \
+        -testResults "$play_mode_out" \
+        -batchmode -logFile -; then
+        echo "Play Mode tests failed!"
+        play_mode_passed=false
+    fi
+fi
+
+if $edit_mode; then
+    echo "Using Unity at $unity_path to run Edit Mode tests..."
+    if ! unity "$unity_path" \
+        -projectPath "$repo_root/src/RGUnityBots" \
+        -testPlatform EditMode \
+        -runTests \
+        $category \
+        -testResults "$edit_mode_out" \
+        -batchmode -logFile -; then
+        echo "Edit Mode tests failed!"
+        edit_mode_passed=false
+    fi
+fi
+
+if $play_mode; then
+    if $play_mode_passed; then
+        echo "*****************************************************"
+        echo "Play Mode tests PASSED! Results are at $play_mode_out"
+        echo "*****************************************************"
+    else
+        echo "*****************************************************"
+        echo "Play Mode tests FAILED! Results are at $play_mode_out"
+        echo "*****************************************************"
+    fi
+fi
+
+if $edit_mode; then
+    if $edit_mode_passed; then
+        echo "*****************************************************"
+        echo "Edit Mode tests PASSED! Results are at $edit_mode_out"
+        echo "*****************************************************"
+    else
+        echo "*****************************************************"
+        echo "Edit Mode tests FAILED! Results are at $edit_mode_out"
+        echo "*****************************************************"
+    fi
+fi
+
+if $play_mode_passed && $edit_mode_passed; then
+    exit 0
+else
+    exit 1
+fi

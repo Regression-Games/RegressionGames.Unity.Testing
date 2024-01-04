@@ -1,0 +1,89 @@
+#!/bin/bash
+#/ Usage: scripts/build [-u|--unity-path <path>] [-b|--build-type <type>]
+#/ Builds the Unity project.
+#/
+#/ Options:
+#/   -u, --unity-path <path>    Path to the Unity installation to use. Defaults to an autodetected path based on the version of RGUnityBots.
+#/   -b, --build-type <type>    Type of build to perform. Defaults to the current platform.
+#/      -b "Linux"              Builds a Linux standalone player.
+#/      -b "macOS"              Builds a macOS standalone player.
+#/      -b "Windows"            Builds a Windows standalone player.
+source_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+repo_root="$(dirname "$source_dir")"
+source "$repo_root/script/_utils.sh"
+
+set -euo pipefail
+
+# Parse arguments
+unity_path=
+build_type=
+while [[ $# -gt 0 ]]; do
+    key="$1"
+    shift
+    case "$key" in
+        -u|--unity-path)
+            unity_path="$1"
+            shift
+            ;;
+        -b|--build-type)
+            build_type="$1"
+            shift
+            ;;
+        --help)
+            grep '^#/' "$0" | cut -c4-
+            exit 0
+            ;;
+        -*)
+            echo "Unknown option: $key"
+            exit 1
+            ;;
+        *)
+            echo "Unknown argument: $key"
+            exit 1
+            ;;
+    esac
+done
+
+if [ -z "$unity_path" ]; then
+    unity_path=$(get_unity_path "$(get_unity_version "$repo_root/src/RGUnityBots")")
+fi
+
+if [ -z "$build_type" ]; then
+    build_type=$(get_build_type)
+fi
+
+if [ ! -d "artifacts" ]; then
+    mkdir -p "artifacts"
+fi
+
+build_output="$repo_root/artifacts/$build_type"
+
+build_args=()
+case "$build_type" in
+    Linux)
+        build_args+=(-buildLinux64Player "$build_output")
+        ;;
+    macOS)
+        build_args+=(-buildOSXUniversalPlayer "$build_output")
+        ;;
+    *)
+        echo "Unknown build type: $build_type" 1>&2
+        exit 1
+        ;;
+esac
+
+echo "Using Unity at $unity_path to build for $build_type"
+if unity "$unity_path" \
+    -projectPath "$repo_root/src/RGUnityBots" \
+    -batchmode -nographics -logFile - -quit \
+    "${build_args[@]}"; then
+    echo "***************"
+    echo "Build succeeded"
+    echo "***************"
+    exit 0
+else
+    echo "***************"
+    echo "Build failed"
+    echo "***************"
+    exit 1
+fi
