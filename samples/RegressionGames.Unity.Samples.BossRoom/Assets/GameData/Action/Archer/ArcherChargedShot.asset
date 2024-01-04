@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48c76b5b71edaea47ae235b755aa840e, type: 3}
+  m_Name: ArcherChargedShot
+  m_EditorClassIdentifier: 
+  Config:
+    Logic: 12
+    Amount: 0
+    ManaCost: 2
+    Range: 20
+    DurationSeconds: 1.1
+    ExecTimeSeconds: 1
+    EffectDurationSeconds: 0
+    ReuseTimeSeconds: 0.7
+    AnimAnticipation: AnticipateMove
+    Anim: ChargedShotStart
+    Anim2: ChargedShotEnd
+    ReactAnim: 
+    OtherAnimatorVariable: 
+    SplashDamage: 0
+    MoveSpeed: 0
+    KnockbackSpeed: 0
+    KnockbackDuration: 0
+    Radius: 0
+    ActionInput: {fileID: 5527641269166010573, guid: 14af79f616f5af84096f27ab81c739f1, type: 3}
+    ActionInterruptible: 1
+    BlockingMode: 0
+    Projectiles:
+    - ProjectilePrefab: {fileID: 2842198241268549130, guid: 7e3b8103f5622f64fa677352730f295c, type: 3}
+      Speed_m_s: 8
+      Range: 20
+      Damage: 5
+      MaxVictims: 1
+    - ProjectilePrefab: {fileID: 2842198241268549130, guid: 411974b75a8b43d4e9b3c9069a5067fb, type: 3}
+      Speed_m_s: 10
+      Range: 30
+      Damage: 10
+      MaxVictims: 2
+    - ProjectilePrefab: {fileID: 2842198241268549130, guid: 0251e08eeed89e844a8527b3a7874cc2, type: 3}
+      Speed_m_s: 12
+      Range: 50
+      Damage: 15
+      MaxVictims: 999
+    Spawns:
+    - {fileID: 2317072454108786653, guid: dd6cb96318a49f84caca6f62c8494ce9, type: 3}
+    IsFriendly: 0
+    Icon: {fileID: 21300000, guid: 4938c18455b902748ba6007690f999ff, type: 3}
+    DisplayedName: Charged Shot
+    Description: Fire an arrow at a target. Charge it up to increase speed, damage,
+      and pierce.

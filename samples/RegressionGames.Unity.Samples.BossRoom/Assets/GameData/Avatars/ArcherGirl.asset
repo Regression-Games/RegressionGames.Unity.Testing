@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 162eca1d3dfdadb479b2885672fd797a, type: 3}
+  m_Name: ArcherGirl
+  m_EditorClassIdentifier: 
+  m_Guid: a11476e3c111154d9a7d54a9096b1541
+  CharacterClass: {fileID: 11400000, guid: db88eb88b930a224fa45fc4e1f943088, type: 2}
+  Graphics: {fileID: 2408587852517914968, guid: c606ea8a9b63df640a18e10c81bbe28c, type: 3}
+  GraphicsCharacterSelect: {fileID: 1879568667037027320, guid: 86a624c82c6c71c4e8a406ed484fbb63, type: 3}
+  Portrait: {fileID: 21300000, guid: f69b90ed162b0584b8c989ba5bdd268f, type: 3}

@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 391381dfd0985674f97b855a5959c93d, type: 3}
+  m_Name: RogueStealthMode
+  m_EditorClassIdentifier: 
+  Config:
+    Logic: 13
+    Amount: 0
+    ManaCost: 2
+    Range: 2
+    DurationSeconds: 0
+    ExecTimeSeconds: 1
+    EffectDurationSeconds: 0
+    ReuseTimeSeconds: 0
+    AnimAnticipation: AnticipateMove
+    Anim: Buff1
+    Anim2: 
+    ReactAnim: 
+    OtherAnimatorVariable: 
+    SplashDamage: 0
+    MoveSpeed: 0
+    KnockbackSpeed: 0
+    KnockbackDuration: 0
+    Radius: 0
+    ActionInput: {fileID: 0}
+    ActionInterruptible: 1
+    BlockingMode: 1
+    Projectiles: []
+    Spawns: []
+    IsFriendly: 0
+    Icon: {fileID: 21300000, guid: 398025be84a763e4c9438505f0c020aa, type: 3}
+    DisplayedName: Sneak
+    Description: Become invisible to enemies (and other players). Ends when you perform
+      an attack.

@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ce0e387261ddc34ba81ca7f2f1f7f73, type: 3}
+  m_Name: Readme
+  m_EditorClassIdentifier: 
+  icon: {fileID: 2800000, guid: 240734f1e1c8daa4b9bd0593e767fb3f, type: 3}
+  title: 'Boss Room: Small Scale Co-op Sample'
+  sections:
+  - heading: Boss Room
+    text: Boss Room Sample Template is an 8-player online multiplayer co-op game
+      showcasing Netcode for GameObjects' (Netcode) networking stack.
+    linkText: 
+    url: 
+  - heading: 
+    text: This Template uses Netcode and its core networking features to enable communication
+      between remote clients.
+    linkText: 
+    url: 
+  - heading: 
+    text: This Template also leverages several services from Unity Gaming Services
+      to facilitate connectivity between players. To use those services, see below
+      for how to set up Unity Gaming Services. Otherwise, Boss Room can still be
+      used without Unity Gaming Services.
+    linkText: 
+    url: 
+  - heading: 
+    text: The entry scene for this game is the Startup scene. From there a game can
+      be hosted or an existing game can be joined.
+    linkText: 
+    url: 
+  - heading: 
+    text: To help us improve and build better samples in the future, please consider
+      submitting feedback about your experiences with Boss Room and let us know if
+      you were able to learn everything you needed to today. It'll only take a couple
+      of minutes. Thanks!
+    linkText: Boss Room Feedback Form.
+    url: https://unitytech.typeform.com/bossroom
+  - heading: 
+    text: 'To read more about Netcode and its built-in features, see the '
+    linkText: Netcode documentation.
+    url: https://docs-multiplayer.unity3d.com/
+  - heading: How to set up Unity Gaming Services
+    text: In order to be able to use the Lobby - you need to set up Unity Gaming
+      Services.
+    linkText: Registering the project with Unity Gaming Services (UGS).
+    url: https://github.com/Unity-Technologies/com.unity.multiplayer.samples.coop#registering-the-project-with-unity-gaming-services-ugs
+  - heading: 
+    text: For more information about Boss Room, see the GitHub repo Readme
+    linkText: Boss Room GitHub public repository.
+    url: https://github.com/Unity-Technologies/com.unity.multiplayer.samples.coop
+  loadedLayout: 1

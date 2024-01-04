@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 162eca1d3dfdadb479b2885672fd797a, type: 3}
+  m_Name: MageBoy
+  m_EditorClassIdentifier: 
+  m_Guid: 0849c65338bad84185168755e0e402e2
+  CharacterClass: {fileID: 11400000, guid: b9743318c3216254bb32b815c6edcb7b, type: 2}
+  Graphics: {fileID: 2760169324013038984, guid: 5198848937b62074586fad6bc95e0f3d, type: 3}
+  GraphicsCharacterSelect: {fileID: 4177120040628001574, guid: 7bede58fa343cbf49a1752ba7afd8bb1, type: 3}
+  Portrait: {fileID: 21300000, guid: 3deeeda2d4bbab248b53d86205131eec, type: 3}

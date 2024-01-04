@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc4a33f0facd1914f81611eb7038be06, type: 3}
+  m_Name: Chase
+  m_EditorClassIdentifier: 
+  Config:
+    Logic: 2
+    Amount: 0
+    ManaCost: 0
+    Range: 0
+    DurationSeconds: 0
+    ExecTimeSeconds: 0
+    EffectDurationSeconds: 0
+    ReuseTimeSeconds: 0
+    AnimAnticipation: 
+    Anim: 
+    Anim2: 
+    ReactAnim: 
+    OtherAnimatorVariable: 
+    SplashDamage: 0
+    MoveSpeed: 0
+    KnockbackSpeed: 0
+    KnockbackDuration: 0
+    Radius: 0
+    ActionInput: {fileID: 0}
+    ActionInterruptible: 1
+    BlockingMode: 0
+    Projectiles: []
+    Spawns: []
+    IsFriendly: 1
+    Icon: {fileID: 0}
+    DisplayedName: 
+    Description: 

@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 419b9dac932a7fb48b27e1cb23939d96, type: 3}
+  m_Name: Emote2
+  m_EditorClassIdentifier: 
+  Config:
+    Logic: 5
+    Amount: 0
+    ManaCost: 0
+    Range: 0
+    DurationSeconds: 1.333
+    ExecTimeSeconds: 0
+    EffectDurationSeconds: 0
+    ReuseTimeSeconds: 0
+    AnimAnticipation: 
+    Anim: Emote2
+    Anim2: 
+    ReactAnim: 
+    OtherAnimatorVariable: 
+    SplashDamage: 0
+    MoveSpeed: 0
+    KnockbackSpeed: 0
+    KnockbackDuration: 0
+    Radius: 0
+    ActionInput: {fileID: 0}
+    ActionInterruptible: 1
+    BlockingMode: 0
+    Projectiles: []
+    Spawns: []
+    IsFriendly: 1
+    Icon: {fileID: 0}
+    DisplayedName: 
+    Description: 

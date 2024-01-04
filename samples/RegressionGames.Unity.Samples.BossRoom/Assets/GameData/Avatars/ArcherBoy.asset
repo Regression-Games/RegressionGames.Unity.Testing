@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 162eca1d3dfdadb479b2885672fd797a, type: 3}
+  m_Name: ArcherBoy
+  m_EditorClassIdentifier: 
+  m_Guid: 6b4b66fe64fb0648a601ceb0e20f371a
+  CharacterClass: {fileID: 11400000, guid: db88eb88b930a224fa45fc4e1f943088, type: 2}
+  Graphics: {fileID: 2408587852517914968, guid: 29d0c8c1a1c40274d97718c37b8b1426, type: 3}
+  GraphicsCharacterSelect: {fileID: 6394439823337557057, guid: c2d4ed9d4c78ec64d9e2a885efb35de3, type: 3}
+  Portrait: {fileID: 21300000, guid: 94f6a790aff553d4ab8c9c243412023c, type: 3}

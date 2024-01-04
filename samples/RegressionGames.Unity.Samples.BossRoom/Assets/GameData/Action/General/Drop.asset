@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f14438f9b760854d913d57c42a9115b, type: 3}
+  m_Name: Drop
+  m_EditorClassIdentifier: 
+  Config:
+    Logic: 17
+    Amount: 0
+    ManaCost: 0
+    Range: 2
+    DurationSeconds: 0
+    ExecTimeSeconds: 0.6
+    EffectDurationSeconds: 0
+    ReuseTimeSeconds: 1.5
+    AnimAnticipation: 
+    Anim: Drop
+    Anim2: 
+    ReactAnim: 
+    OtherAnimatorVariable: 
+    SplashDamage: 0
+    MoveSpeed: 0
+    KnockbackSpeed: 0
+    KnockbackDuration: 0
+    Radius: 0
+    ActionInput: {fileID: 0}
+    ActionInterruptible: 0
+    IsInterruptableBy: []
+    BlockingMode: 0
+    Projectiles: []
+    Spawns: []
+    IsFriendly: 0
+    Icon: {fileID: 21300000, guid: 499b122955332b749a14e3ba8f683b39, type: 3}
+    DisplayedName: Drop
+    Description: Drop a held object

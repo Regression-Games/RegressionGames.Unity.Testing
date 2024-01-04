@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b4188d885b829e4d8b1f0e84c9d3de5, type: 3}
+  m_Name: MageBaseAttack
+  m_EditorClassIdentifier: 
+  Config:
+    Logic: 6
+    Amount: 0
+    ManaCost: 2
+    Range: 20
+    DurationSeconds: 0
+    ExecTimeSeconds: 0.25
+    EffectDurationSeconds: 0
+    ReuseTimeSeconds: 0.5
+    AnimAnticipation: AnticipateMove
+    Anim: Attack1
+    Anim2: 
+    ReactAnim: 
+    OtherAnimatorVariable: 
+    SplashDamage: 0
+    MoveSpeed: 0
+    KnockbackSpeed: 0
+    KnockbackDuration: 0
+    Radius: 0
+    ActionInput: {fileID: 0}
+    ActionInterruptible: 0
+    BlockingMode: 1
+    Projectiles:
+    - ProjectilePrefab: {fileID: 765690034209705780, guid: 28c5ae0155a675f4480b7f3e329a7504, type: 3}
+      Speed_m_s: 64
+      Range: 20
+      Damage: 5
+      MaxVictims: 1
+    Spawns: []
+    IsFriendly: 0
+    Icon: {fileID: 21300000, guid: b9e99c5047610c0428b75996339649f7, type: 3}
+    DisplayedName: Magic Bolt
+    Description: Fire an unerring magic missile. Doesn't deal a lot of damage, but
+      it always hits!

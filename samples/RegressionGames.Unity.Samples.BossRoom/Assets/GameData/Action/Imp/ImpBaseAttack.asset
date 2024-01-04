@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62b840a5705be5b4b9c5f9926aafcc85, type: 3}
+  m_Name: ImpBaseAttack
+  m_EditorClassIdentifier: 
+  Config:
+    Logic: 0
+    Amount: 15
+    ManaCost: 2
+    Range: 2
+    DurationSeconds: 1.4
+    ExecTimeSeconds: 0.65
+    EffectDurationSeconds: 0
+    ReuseTimeSeconds: 0
+    AnimAnticipation: 
+    Anim: Attack1
+    Anim2: 
+    ReactAnim: 
+    OtherAnimatorVariable: 
+    SplashDamage: 0
+    MoveSpeed: 0
+    KnockbackSpeed: 0
+    KnockbackDuration: 0
+    Radius: 0
+    ActionInput: {fileID: 0}
+    ActionInterruptible: 0
+    BlockingMode: 0
+    Projectiles: []
+    Spawns: []
+    IsFriendly: 0
+    Icon: {fileID: 0}
+    DisplayedName: 
+    Description: 

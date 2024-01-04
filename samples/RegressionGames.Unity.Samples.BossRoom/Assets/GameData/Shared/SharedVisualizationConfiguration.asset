@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47d9899c7898a3b48a011f9f8c2a123e, type: 3}
+  m_Name: SharedVisualizationConfiguration
+  m_EditorClassIdentifier: 
+  m_AliveStateTrigger: StandUp
+  m_FaintedStateTrigger: FallDown
+  m_DeadStateTrigger: Dead
+  m_AnticipateMoveTrigger: AnticipateMove
+  m_EntryDeathTrigger: EntryDeath
+  m_EntryFaintedTrigger: EntryFainted
+  m_SpeedVariable: Speed
+  m_BaseNodeTag: BaseNode
+  SpeedDead: 0
+  SpeedIdle: 0
+  SpeedNormal: 1
+  SpeedUncontrolled: 0
+  SpeedSlowed: 2
+  SpeedHasted: 1.5
+  SpeedWalking: 0.5
+  TargetReticule: {fileID: 3697322597467218969, guid: 546d1949af792c245b0861507d25a349, type: 3}
+  ReticuleFriendlyMat: {fileID: 2100000, guid: 0bc9c70c830bca44dbddfbc5c49830f8, type: 2}
+  ReticuleHostileMat: {fileID: 2100000, guid: 06ea36c997b09a943b6f5ea691093c21, type: 2}
+  AliveStateTriggerID: -1201797473
+  FaintedStateTriggerID: 426567206
+  DeadStateTriggerID: 1293411866
+  AnticipateMoveTriggerID: 291833189
+  EntryDeathTriggerID: -1864568334
+  EntryFaintedTriggerID: -379974620
+  SpeedVariableID: -823668238
+  BaseNodeTagID: -80330083

@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1383fc6b0805339469d44c02534fbb30, type: 3}
+  m_Name: VandalImp
+  m_EditorClassIdentifier: 
+  CharacterType: 6
+  Skill1: {fileID: 11400000, guid: 493feb878ef9648feb46afce19716b47, type: 2}
+  Skill2: {fileID: 0}
+  Skill3: {fileID: 0}
+  BaseHP: {fileID: 11400000, guid: f41e9bb72a80c694d81c8038aaa732a6, type: 2}
+  BaseMana: 5
+  Speed: 5
+  IsNpc: 1
+  DetectRange: 10
+  DisplayedName: 
+  ClassBannerLit: {fileID: 0}
+  ClassBannerUnlit: {fileID: 0}

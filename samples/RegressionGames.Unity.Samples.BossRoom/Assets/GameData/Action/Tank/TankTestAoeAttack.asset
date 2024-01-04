@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7044b4c67382459499bd1d3c09aaecf, type: 3}
+  m_Name: TankTestAoeAttack
+  m_EditorClassIdentifier: 
+  Config:
+    Logic: 7
+    Amount: 30
+    ManaCost: 0
+    Range: 0
+    DurationSeconds: 0
+    ExecTimeSeconds: 0
+    EffectDurationSeconds: 0
+    ReuseTimeSeconds: 0
+    AnimAnticipation: AnticipateMove
+    Anim: Attack1
+    Anim2: 
+    ReactAnim: 
+    OtherAnimatorVariable: 
+    SplashDamage: 0
+    MoveSpeed: 0
+    KnockbackSpeed: 0
+    KnockbackDuration: 0
+    Radius: 6
+    ActionInput: {fileID: 8447158110562487606, guid: 88beb3857541f46d9becf14ba3392b89, type: 3}
+    ActionInterruptible: 0
+    BlockingMode: 0
+    Projectiles: []
+    Spawns:
+    - {fileID: 2518139487072021748, guid: 1b242eb1e81644e5e8c528509ba78cb4, type: 3}
+    IsFriendly: 0
+    Icon: {fileID: 0}
+    DisplayedName: 
+    Description: 

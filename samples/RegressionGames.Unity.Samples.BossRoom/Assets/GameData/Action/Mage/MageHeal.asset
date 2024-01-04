@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62b840a5705be5b4b9c5f9926aafcc85, type: 3}
+  m_Name: MageHeal
+  m_EditorClassIdentifier: 
+  Config:
+    Logic: 0
+    Amount: -250
+    ManaCost: 4
+    Range: 10
+    DurationSeconds: 0.3
+    ExecTimeSeconds: 0.25
+    EffectDurationSeconds: 0
+    ReuseTimeSeconds: 0
+    AnimAnticipation: AnticipateMove
+    Anim: SkillHeal
+    Anim2: 
+    ReactAnim: Emote1
+    OtherAnimatorVariable: 
+    SplashDamage: 0
+    MoveSpeed: 0
+    KnockbackSpeed: 0
+    KnockbackDuration: 0
+    Radius: 0
+    ActionInput: {fileID: 0}
+    ActionInterruptible: 0
+    BlockingMode: 0
+    Projectiles: []
+    Spawns:
+    - {fileID: 5082887311174748168, guid: 644c238552d6e06418fd67fc4f27f5e8, type: 3}
+    IsFriendly: 1
+    Icon: {fileID: 21300000, guid: 9840d62bc2dd2074cb672acb47b92e03, type: 3}
+    DisplayedName: Healing Touch
+    Description: Heal yourself or a nearby ally.

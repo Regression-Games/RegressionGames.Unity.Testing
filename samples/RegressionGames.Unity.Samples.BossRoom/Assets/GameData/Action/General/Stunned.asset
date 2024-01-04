@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae63b30e2324d324d8e3ce38e31203db, type: 3}
+  m_Name: Stunned
+  m_EditorClassIdentifier: 
+  Config:
+    Logic: 10
+    Amount: 2
+    ManaCost: 0
+    Range: 0
+    DurationSeconds: 5
+    ExecTimeSeconds: 1
+    EffectDurationSeconds: 0
+    ReuseTimeSeconds: 0
+    AnimAnticipation: 
+    Anim: Stunned
+    Anim2: Unstunned
+    ReactAnim: 
+    OtherAnimatorVariable: 
+    SplashDamage: 0
+    MoveSpeed: 0
+    KnockbackSpeed: 0
+    KnockbackDuration: 0
+    Radius: 0
+    ActionInput: {fileID: 0}
+    ActionInterruptible: 0
+    BlockingMode: 0
+    Projectiles: []
+    Spawns: []
+    IsFriendly: 0
+    Icon: {fileID: 0}
+    DisplayedName: 
+    Description: 

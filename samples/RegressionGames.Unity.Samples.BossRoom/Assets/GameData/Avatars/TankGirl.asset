@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 162eca1d3dfdadb479b2885672fd797a, type: 3}
+  m_Name: TankGirl
+  m_EditorClassIdentifier: 
+  m_Guid: 80c9887db9e5cc4da7ecb7b24c0d5bbb
+  CharacterClass: {fileID: 11400000, guid: 358012a7531bbb644bc269602d1ddaed, type: 2}
+  Graphics: {fileID: 9187479739242730375, guid: b87361d084178644cab2510090411db8, type: 3}
+  GraphicsCharacterSelect: {fileID: 2610400121077600659, guid: 9e2d5c7ee42608f4db48a6a238b3f0ae, type: 3}
+  Portrait: {fileID: 21300000, guid: 0df68ec30ffb84543882e4a2b026caee, type: 3}

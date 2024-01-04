@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 162eca1d3dfdadb479b2885672fd797a, type: 3}
+  m_Name: RogueBoy
+  m_EditorClassIdentifier: 
+  m_Guid: 1eb8a36812bd384ca2d896f2ba5bca75
+  CharacterClass: {fileID: 11400000, guid: 131bd29e682b4e34aa5c8b1f8ba4a48d, type: 2}
+  Graphics: {fileID: 6329834514286226247, guid: d462455aa2605fc41a44a4f249ec5b5d, type: 3}
+  GraphicsCharacterSelect: {fileID: 878901532367110463, guid: 30b2e61172343c74e82b1ddb9e5360f8, type: 3}
+  Portrait: {fileID: 21300000, guid: 9781ab5273dea1c4e94c1ab8d4d18b31, type: 3}

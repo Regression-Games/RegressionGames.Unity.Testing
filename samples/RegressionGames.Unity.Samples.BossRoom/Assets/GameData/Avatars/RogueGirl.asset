@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 162eca1d3dfdadb479b2885672fd797a, type: 3}
+  m_Name: RogueGirl
+  m_EditorClassIdentifier: 
+  m_Guid: 8c97d9778161c348852406dc674961f7
+  CharacterClass: {fileID: 11400000, guid: 131bd29e682b4e34aa5c8b1f8ba4a48d, type: 2}
+  Graphics: {fileID: 6329834514286226247, guid: 8034e8adbac536c4fb76fbe53f115741, type: 3}
+  GraphicsCharacterSelect: {fileID: 7799824671938135115, guid: ea746edd3c8d4824cbef11ed2d5a16cb, type: 3}
+  Portrait: {fileID: 21300000, guid: bb7d37d2a40813048883c2696e975eac, type: 3}
