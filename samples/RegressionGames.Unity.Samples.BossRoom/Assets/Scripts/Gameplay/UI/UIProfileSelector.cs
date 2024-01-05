@@ -100,6 +100,7 @@ namespace Unity.BossRoom.Gameplay.UI
         public void Show()
         {
             m_CanvasGroup.alpha = 1f;
+            m_CanvasGroup.interactable = true;
             m_CanvasGroup.blocksRaycasts = true;
             m_NewProfileField.text = "";
             InitializeUI();
@@ -108,6 +109,7 @@ namespace Unity.BossRoom.Gameplay.UI
         public void Hide()
         {
             m_CanvasGroup.alpha = 0f;
+            m_CanvasGroup.interactable = false;
             m_CanvasGroup.blocksRaycasts = false;
         }
     }

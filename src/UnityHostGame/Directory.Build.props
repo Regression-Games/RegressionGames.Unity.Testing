@@ -1,0 +1,14 @@
+<Project>
+    <!--
+        This file is automatically imported into every csproj file nested below it.
+        This process isn't recursive though, so only the nearest Directory.Build.props
+        file is imported.
+    -->
+    <PropertyGroup>
+        <!--
+            Enable Nullable Reference Types for our csproj files.
+            This allows us to use '?' syntax and requires that we perform adequate null-checks.
+        -->
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+</Project>

@@ -218,12 +218,14 @@ namespace Unity.BossRoom.Gameplay.UI
         public void Show()
         {
             m_CanvasGroup.alpha = 1f;
+            m_CanvasGroup.interactable = true;
             m_CanvasGroup.blocksRaycasts = true;
         }
 
         public void Hide()
         {
             m_CanvasGroup.alpha = 0f;
+            m_CanvasGroup.interactable = false;
             m_CanvasGroup.blocksRaycasts = false;
             m_LobbyCreationUI.Hide();
             m_LobbyJoiningUI.Hide();

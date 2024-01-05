@@ -1,8 +1,6 @@
 using System;
 using UnityEngine;
 
-#nullable enable
-
 namespace RegressionGames.Unity
 {
     internal interface ILogger
@@ -17,12 +15,12 @@ namespace RegressionGames.Unity
     {
         private readonly string m_Category;
 
-        public Logger(string category)
+        public Logger(string? category)
         {
-            m_Category = category;
+            m_Category = category ?? "RegressionGames.Unity";
         }
 
-        public static Logger For(string category)
+        public static Logger For(string? category)
         {
             return new Logger(category);
         }
@@ -37,8 +35,14 @@ namespace RegressionGames.Unity
         public void Error(string message) => Debug.LogError(FormatMessage(message));
         public void Exception(Exception ex) => Debug.LogException(ex);
 
+        public void Info(string message, UnityEngine.Object? context) => Debug.Log(FormatMessage(message), context);
+        public void Warning(string message, UnityEngine.Object? context) => Debug.LogWarning(FormatMessage(message), context);
+        public void Error(string message, UnityEngine.Object? context) => Debug.LogError(FormatMessage(message), context);
+        public void Exception(Exception ex, UnityEngine.Object? context) => Debug.LogException(ex, context);
+
         // TODO: Make this filterable.
         public void Verbose(string message) => Debug.Log(FormatMessage(message));
+        public void Verbose(string message, UnityEngine.Object context) => Debug.Log(FormatMessage(message), context);
 
         string FormatMessage(string message) => $"[{m_Category}] {message}";
     }
@@ -51,7 +55,7 @@ namespace RegressionGames.Unity
         public Logger(T instance)
         {
             m_Instance = instance;
-            m_Category = instance.GetType().FullName ?? "RegressionGames";
+            m_Category = instance.GetType().FullName ?? "RegressionGames.Unity";
         }
 
         public void Info(string message) => Debug.Log(FormatMessage(message), m_Instance);
@@ -59,8 +63,14 @@ namespace RegressionGames.Unity
         public void Error(string message) => Debug.LogError(FormatMessage(message), m_Instance);
         public void Exception(Exception ex) => Debug.LogException(ex, m_Instance);
 
+        public void Info(string message, UnityEngine.Object? context) => Debug.Log(FormatMessage(message), context);
+        public void Warning(string message, UnityEngine.Object? context) => Debug.LogWarning(FormatMessage(message), context);
+        public void Error(string message, UnityEngine.Object? context) => Debug.LogError(FormatMessage(message), context);
+        public void Exception(Exception ex, UnityEngine.Object? context) => Debug.LogException(ex, context);
+
         // TODO: Make this filterable.
         public void Verbose(string message) => Debug.Log(FormatMessage(message), m_Instance);
+        public void Verbose(string message, UnityEngine.Object? context) => Debug.Log(FormatMessage(message), context);
 
         string FormatMessage(string message) => $"[{m_Category}] {message}";
     }
