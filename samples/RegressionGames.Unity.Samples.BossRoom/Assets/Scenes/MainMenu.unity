@@ -130,9 +130,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 801871711757634723, guid: cc81c45aac9c74215bc92bf65389b709, type: 3}
+      propertyPath: initialBots.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 801871711757634723, guid: cc81c45aac9c74215bc92bf65389b709, type: 3}
+      propertyPath: initialBots.Array.data[0]
+      value: 
+      objectReference: {fileID: 6522619634799537767, guid: 271f541396cbe401d8132ef8f1ec8917, type: 3}
     - target: {fileID: 5756155928033506571, guid: cc81c45aac9c74215bc92bf65389b709, type: 3}
       propertyPath: m_Name
       value: AutomationController
+      objectReference: {fileID: 0}
+    - target: {fileID: 5756155928033506571, guid: cc81c45aac9c74215bc92bf65389b709, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6183782300198770710, guid: cc81c45aac9c74215bc92bf65389b709, type: 3}
       propertyPath: m_RootOrder
