@@ -1,12 +1,10 @@
 using System;
+using RegressionGames.Unity.Automation;
 using UnityEngine;
 
-namespace RegressionGames.Unity.Automation
+namespace RegressionGames.Unity.Discovery
 {
-    /// <summary>
-    /// Represents a bot that can be spawned by an <see cref="AutomationController"/>
-    /// </summary>
-    public abstract class Bot: MonoBehaviour
+    public abstract class EntityDiscoverer: MonoBehaviour
     {
         AutomationController m_AutomationController;
 

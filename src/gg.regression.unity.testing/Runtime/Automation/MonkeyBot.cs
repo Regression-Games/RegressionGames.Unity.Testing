@@ -1,5 +1,4 @@
-using System;
-using System.Security.Cryptography;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -11,24 +10,47 @@ namespace RegressionGames.Unity.Automation
     [AddComponentMenu("Regression Games/Bots/Monkey Bot")]
     public class MonkeyBot: Bot
     {
-        private Logger<MonkeyBot> m_Log;
+        private readonly Logger<MonkeyBot> m_Log;
+
+        public int activationIntervalInSeconds = 5;
+
+        private float m_LastActivation;
 
         public MonkeyBot()
         {
             m_Log = Logger.For(this);
         }
 
-        protected internal override void Execute(BotContext context)
+        protected override void Awake()
         {
+            base.Awake();
+            m_LastActivation = Time.time;
+        }
+
+        private void Update()
+        {
+            if(Time.time - m_LastActivation < activationIntervalInSeconds)
+            {
+                return;
+            }
+            m_LastActivation = Time.time;
+
             m_Log.Verbose($"Activating at {Time.time}");
 
-            if (context.AvailableActions.Count == 0)
+            // TODO: This allocates a new list each frame, which isn't ideal.
+            var availableActions = AutomationController.Entities
+                .SelectMany(e => e.Actions.Values)
+                .Where(a => a.CanActivateThisFrame())
+                .ToList();
+
+            if (availableActions.Count == 0)
             {
-                // Nothing to do if there's nothing to do!
+                m_Log.Verbose("No actions available this frame.");
                 return;
             }
 
-            var action = context.AvailableActions[Random.Range(0, context.AvailableActions.Count)];
+            // Select a random action and activate it.
+            var action = availableActions[Random.Range(0, availableActions.Count)];
             action.Activate();
         }
     }
