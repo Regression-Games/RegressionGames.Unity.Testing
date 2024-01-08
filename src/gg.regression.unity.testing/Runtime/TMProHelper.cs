@@ -6,8 +6,8 @@ namespace RegressionGames.Unity
 {
     static class TMProHelper
     {
-        private static readonly Type? TMProTextType;
-        private static readonly PropertyInfo? TMProTextProperty;
+        private static readonly Type TMProTextType;
+        private static readonly PropertyInfo TMProTextProperty;
 
         static TMProHelper()
         {
@@ -16,7 +16,7 @@ namespace RegressionGames.Unity
         }
 
         // Helper class for working with TextMeshPro without a hard dependency on it.
-        public static string? TryGetTMProTextFromChild(Component parent)
+        public static string TryGetTMProTextFromChild(Component parent)
         {
             if (TMProTextType == null || TMProTextProperty == null)
             {

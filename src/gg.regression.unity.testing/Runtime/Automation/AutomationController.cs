@@ -14,16 +14,16 @@ namespace RegressionGames.Unity.Automation
     public class AutomationController: MonoBehaviour
     {
         [Tooltip("The components used to discover actions the bot can take in this scene.")]
-        public ActionDiscoverer[]? actionDiscoverers;
+        public ActionDiscoverer[] actionDiscoverers;
 
         [Tooltip("By default, action discovery happens once when the controller is spawned. If this is true, actions will be discovered every frame, during Update")]
         public bool discoverEveryFrame;
 
         [Tooltip("Bots that should be spawned as soon as the Automation Controller awakens in the scene.")]
-        public Bot[]? initialBots;
+        public BotConfiguration[] initialBots;
 
-        private List<IAutomationAction>? m_DiscoveredActions = null;
-        private List<Bot> m_ActiveBots = new();
+        private List<IAutomationAction> m_DiscoveredActions;
+        private readonly List<BotInstance> m_ActiveBots = new();
 
         private readonly Logger<AutomationController> m_Log;
 
@@ -36,10 +36,10 @@ namespace RegressionGames.Unity.Automation
         {
             DiscoverActions();
 
-            foreach (var bot in initialBots ?? Array.Empty<Bot>())
+            foreach (var configuration in initialBots ?? Array.Empty<BotConfiguration>())
             {
-                var spawned = Instantiate(bot, transform);
-                m_ActiveBots.Add(spawned);
+                var spawned = Instantiate(configuration.bot, transform);
+                m_ActiveBots.Add(new(spawned, configuration.activationIntervalInFrames, Time.frameCount));
             }
         }
 
@@ -48,37 +48,58 @@ namespace RegressionGames.Unity.Automation
             // Bots we spawned belong to us. Destroy them when we're destroyed.
             foreach (var bot in m_ActiveBots)
             {
-                Destroy(bot);
+                Destroy(bot.instance);
             }
             m_ActiveBots.Clear();
         }
 
         private void Update()
         {
-            if (discoverEveryFrame)
+            // A memoized function to scan for available actions.
+            // This will only be called if a bot is going to run this frame.
+            // But once it's called, we'll save the result so we don't have to scan again this frame.
+            IAutomationAction[] availableActions = null;
+            IReadOnlyList<IAutomationAction> GetAvailableActions()
             {
-                DiscoverActions();
+                if (availableActions is null)
+                {
+                    // Discover new actions, if requested.
+                    if (discoverEveryFrame)
+                    {
+                        DiscoverActions();
+                    }
+
+                    availableActions = m_DiscoveredActions == null
+                        ? Array.Empty<IAutomationAction>()
+                        : m_DiscoveredActions.Where(a => a.CanActivateThisFrame()).ToArray();
+                    m_Log.Verbose($"Discovered {availableActions.Length} available actions this frame");
+                }
+
+                return availableActions;
             }
 
-            var availableActions = m_DiscoveredActions == null
-                ? Array.Empty<IAutomationAction>()
-                : m_DiscoveredActions.Where(a => a.CanActivateThisFrame()).ToArray();
-            m_Log.Verbose($"Found {availableActions.Length} actions available this frame");
-
             // Run through all the bots and give them the actions they can perform
-            var botContext = new BotContext(availableActions, m_DiscoveredActions);
             foreach (var bot in m_ActiveBots)
             {
-                m_Log.Verbose($"Executing bot {bot.GetType().FullName}");
+                if (Time.frameCount - bot.lastActivation < bot.activationIntervalInFrames)
+                {
+                    continue;
+                }
+
+                m_Log.Verbose($"Activating bot {bot.GetType().FullName} on frame {Time.frameCount}");
+                bot.lastActivation = Time.frameCount;
+
+                var botContext = new BotContext(GetAvailableActions(), m_DiscoveredActions);
 
                 // Don't allow one bot to stop another by throwing
                 try
                 {
-                    bot.Execute(botContext);
+                    bot.instance.Execute(botContext);
                 }
                 catch (Exception ex)
                 {
-                    m_Log.Exception(ex, bot);
+                    // TODO: Deactivate the bot if it keeps throwing?
+                    m_Log.Exception(ex, bot.instance);
                 }
             }
         }
@@ -95,6 +116,20 @@ namespace RegressionGames.Unity.Automation
             }
 
             m_DiscoveredActions = actions;
+        }
+
+        class BotInstance
+        {
+            public Bot instance;
+            public int activationIntervalInFrames;
+            public int lastActivation;
+
+            public BotInstance(Bot instance, int activationIntervalInFrames, int lastActivation)
+            {
+                this.instance = instance;
+                this.activationIntervalInFrames = activationIntervalInFrames;
+                this.lastActivation = lastActivation;
+            }
         }
     }
 }

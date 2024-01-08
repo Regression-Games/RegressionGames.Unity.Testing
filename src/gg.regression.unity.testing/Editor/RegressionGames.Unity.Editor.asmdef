@@ -1,4 +1,5 @@
 {
   "name": "RegressionGames.Unity.Editor",
-  "rootNamespace": "RegressionGames.Unity.Editor"
+  "rootNamespace": "RegressionGames.Unity.Editor",
+  "references":[ "RegressionGames.Unity" ]
 }
