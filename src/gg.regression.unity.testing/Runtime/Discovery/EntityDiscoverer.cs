@@ -7,7 +7,7 @@ namespace RegressionGames.Unity.Discovery
 {
     public abstract class EntityDiscoverer: AutomationBehavior
     {
-        private readonly List<IAutomationEntity> m_Entities = new();
+        private readonly List<AutomationEntity> m_Entities = new();
 
         protected override void Awake()
         {
@@ -28,12 +28,12 @@ namespace RegressionGames.Unity.Discovery
             m_Entities.Clear();
         }
 
-        protected void RegisterEntity(IAutomationEntity entity)
+        protected void RegisterEntity(AutomationEntity entity)
         {
             m_Entities.Add(entity);
             AutomationController.RegisterEntity(entity);
         }
 
-        protected virtual IEnumerable<IAutomationEntity> DiscoverEntities() => Enumerable.Empty<IAutomationEntity>();
+        protected virtual IEnumerable<AutomationEntity> DiscoverEntities() => Enumerable.Empty<AutomationEntity>();
     }
 }

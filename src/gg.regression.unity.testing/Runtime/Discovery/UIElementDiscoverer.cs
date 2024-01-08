@@ -16,75 +16,70 @@ namespace RegressionGames.Unity.Discovery
             m_Log = Logger.For(this);
         }
 
-        protected override IEnumerable<IAutomationEntity> DiscoverEntities()
+        protected override IEnumerable<AutomationEntity> DiscoverEntities()
         {
             m_Log.Verbose("Scanning for UI elements...");
-            var buttons = FindObjectsOfType<Button>();
-            foreach (var button in buttons)
+            var uiBehaviours = FindObjectsOfType<Selectable>();
+            foreach (var uiBehaviour in uiBehaviours)
             {
-                yield return new UIButtonEntity(button);
+                yield return new UISelectableEntity(uiBehaviour);
+            }
+
+            var canvasGroups = FindObjectsOfType<CanvasGroup>();
+            foreach (var canvasGroup in canvasGroups)
+            {
+                yield return new UIGroupEntity(canvasGroup);
             }
         }
 
-        class UIButtonEntity : IAutomationEntity
+        class UIGroupEntity : AutomationEntity<CanvasGroup>
         {
-            public int Id { get; }
-            public string Name { get; }
-            public string Description => $"A button labelled '{Name}'";
-
-            public UIButtonEntity(Button button)
+            public UIGroupEntity(CanvasGroup canvasGroup): base(canvasGroup, $"A canvas group named {canvasGroup.gameObject.name}")
             {
-                Id = button.transform.GetInstanceID();
-                Name = DiscoverName(button);
-
-                var clickAction = new UIButtonAction(button);
-                Actions = new Dictionary<string, IAutomationAction>
-                {
-                    { clickAction.Name, clickAction }
-                };
             }
 
-            public IReadOnlyDictionary<string, IAutomationAction> Actions { get; }
-
-            static string DiscoverName(Component uiElement)
+            public override IEnumerable<KeyValuePair<string, object>> GetState()
             {
-                if (TMProHelper.TryGetTMProTextFromChild(uiElement) is { } tmProText)
-                {
-                    return tmProText;
-                }
-
-                // Check if there's a child text element, and if so, use that as the name.
-                var text = uiElement.GetComponentInChildren<Text>();
-                if (text != null)
-                {
-                    return text.text;
-                }
-
-                return uiElement.gameObject.name;
+                yield return new("alpha", Component.alpha);
+                yield return new("interactable", Component.interactable);
+                yield return new("blocksRaycasts", Component.blocksRaycasts);
             }
         }
 
-        class UIButtonAction : IAutomationAction
+        class UISelectableEntity : AutomationEntity<Selectable>
         {
-            private readonly Button m_Button;
+            public override IReadOnlyDictionary<string, AutomationAction> Actions { get; }
+
+            public UISelectableEntity(Selectable selectable): base(selectable, UIUtils.DescribeSelectable(selectable))
+            {
+                var actions = new Dictionary<string, AutomationAction>();
+                if (selectable is IPointerClickHandler)
+                {
+                    var clickAction = new UIClickAction(selectable, this);
+                    actions.Add(clickAction.Name, clickAction);
+                }
+                Actions = actions;
+            }
+        }
+
+        class UIClickAction : AutomationAction
+        {
+            private readonly Selectable m_Selectable;
             private readonly Logger m_Log;
 
-            public string Name => "Click";
-            public string Description => "Clicks the button";
-
-            public UIButtonAction(Button button)
+            public UIClickAction(Selectable selectable, AutomationEntity entity): base("Click", "Clicks the element", entity)
             {
-                m_Button = button;
-                m_Log = Logger.For(typeof(UIButtonAction).FullName);
+                m_Selectable = selectable;
+                m_Log = Logger.For(typeof(UIClickAction).FullName);
             }
 
-            public bool CanActivateThisFrame() => m_Button.IsInteractable();
+            public override bool CanActivateThisFrame() => m_Selectable.IsInteractable();
 
-            public void Activate()
+            protected override void Execute()
             {
-                m_Log.Verbose($"Activating {Name}", m_Button);
+                m_Log.Verbose($"Activating {Name}", m_Selectable);
                 ExecuteEvents.Execute<IPointerClickHandler>(
-                    m_Button.gameObject,
+                    m_Selectable.gameObject,
                     new PointerEventData(EventSystem.current),
                     (h, d) => h.OnPointerClick((PointerEventData)d));
             }
