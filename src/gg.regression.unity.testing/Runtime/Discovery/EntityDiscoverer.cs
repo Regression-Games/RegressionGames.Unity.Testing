@@ -1,39 +1,22 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using RegressionGames.Unity.Automation;
+using UnityEngine;
 
 namespace RegressionGames.Unity.Discovery
 {
-    public abstract class EntityDiscoverer: AutomationBehavior
+    public abstract class EntityDiscoverer: MonoBehaviour
     {
-        private readonly List<IAutomationEntity> m_Entities = new();
+        AutomationController m_AutomationController;
 
-        protected override void Awake()
+        protected AutomationController AutomationController => m_AutomationController;
+
+        protected virtual void Awake()
         {
-            base.Awake();
-
-            foreach (var entity in DiscoverEntities())
+            m_AutomationController = GetComponentInParent<AutomationController>();
+            if (m_AutomationController == null)
             {
-                RegisterEntity(entity);
+                throw new InvalidOperationException("EntityDiscoverer must be a child of an AutomationController.");
             }
         }
-
-        protected virtual void OnDestroy()
-        {
-            foreach (var entity in m_Entities)
-            {
-                AutomationController.UnregisterEntity(entity);
-            }
-            m_Entities.Clear();
-        }
-
-        protected void RegisterEntity(IAutomationEntity entity)
-        {
-            m_Entities.Add(entity);
-            AutomationController.RegisterEntity(entity);
-        }
-
-        protected virtual IEnumerable<IAutomationEntity> DiscoverEntities() => Enumerable.Empty<IAutomationEntity>();
     }
 }

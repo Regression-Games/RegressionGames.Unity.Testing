@@ -10,6 +10,9 @@ namespace RegressionGames.Unity.Automation
     [AddComponentMenu("Regression Games/Automation Controller")]
     public class AutomationController: MonoBehaviour
     {
+        [Tooltip("The initial bots to spawn.")]
+        public Bot[] initialBots;
+
         // TODO: We can "index" entities by other values, like their ID, name or type, to make it easier to find them.
         // For now though, we'll implement those finders by iterating the list, until we have a need to optimize.
         private readonly List<IAutomationEntity> m_Entities = new();
@@ -33,17 +36,11 @@ namespace RegressionGames.Unity.Automation
             m_Entities.Remove(entity);
         }
 
-        class BotInstance
+        private void Awake()
         {
-            public Bot instance;
-            public int activationIntervalInFrames;
-            public int lastActivation;
-
-            public BotInstance(Bot instance, int activationIntervalInFrames, int lastActivation)
+            foreach (var bot in initialBots)
             {
-                this.instance = instance;
-                this.activationIntervalInFrames = activationIntervalInFrames;
-                this.lastActivation = lastActivation;
+                Instantiate(bot, transform);
             }
         }
     }

@@ -8,5 +8,17 @@ namespace RegressionGames.Unity.Automation
     /// </summary>
     public abstract class Bot: AutomationBehavior
     {
+        AutomationController m_AutomationController;
+
+        protected AutomationController AutomationController => m_AutomationController;
+
+        protected virtual void Awake()
+        {
+            m_AutomationController = GetComponentInParent<AutomationController>();
+            if (m_AutomationController == null)
+            {
+                throw new InvalidOperationException("EntityDiscoverer must be a child of an AutomationController.");
+            }
+        }
     }
 }

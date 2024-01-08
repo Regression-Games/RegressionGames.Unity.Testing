@@ -11,18 +11,32 @@ namespace RegressionGames.Unity.Discovery
     {
         private readonly Logger<UIElementDiscoverer> m_Log;
 
+        private readonly List<IAutomationEntity> m_Entities = new();
+
         public UIElementDiscoverer()
         {
             m_Log = Logger.For(this);
         }
 
-        protected override IEnumerable<IAutomationEntity> DiscoverEntities()
+        protected override void Awake()
         {
+            base.Awake();
+
             m_Log.Verbose("Scanning for UI elements...");
             var buttons = FindObjectsOfType<Button>();
             foreach (var button in buttons)
             {
-                yield return new UIButtonEntity(button);
+                var entity = new UIButtonEntity(button);
+                m_Entities.Add(entity);
+                AutomationController.RegisterEntity(entity);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            foreach (var entity in m_Entities)
+            {
+                AutomationController.UnregisterEntity(entity);
             }
         }
 
@@ -88,6 +102,7 @@ namespace RegressionGames.Unity.Discovery
                     new PointerEventData(EventSystem.current),
                     (h, d) => h.OnPointerClick((PointerEventData)d));
             }
+
         }
     }
 }
