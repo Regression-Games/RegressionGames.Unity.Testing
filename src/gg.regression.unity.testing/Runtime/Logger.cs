@@ -15,12 +15,12 @@ namespace RegressionGames.Unity
     {
         private readonly string m_Category;
 
-        public Logger(string? category)
+        public Logger(string category)
         {
             m_Category = category ?? "RegressionGames.Unity";
         }
 
-        public static Logger For(string? category)
+        public static Logger For(string category)
         {
             return new Logger(category);
         }

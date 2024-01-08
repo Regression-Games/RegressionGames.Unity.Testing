@@ -32,5 +32,19 @@ namespace RegressionGames.Unity.Automation
         {
             m_Entities.Remove(entity);
         }
+
+        class BotInstance
+        {
+            public Bot instance;
+            public int activationIntervalInFrames;
+            public int lastActivation;
+
+            public BotInstance(Bot instance, int activationIntervalInFrames, int lastActivation)
+            {
+                this.instance = instance;
+                this.activationIntervalInFrames = activationIntervalInFrames;
+                this.lastActivation = lastActivation;
+            }
+        }
     }
 }
