@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace RegressionGames.Unity.Recording
@@ -88,7 +89,7 @@ namespace RegressionGames.Unity.Recording
 
             // Serialize the snapshot to JSON and save it
             var outputJson = Path.Combine(m_SessionDirectory, $"snapshot.{action.Snapshot.frame.frameCount}.json");
-            var jsonBuf = JsonUtility.ToJson(action.Snapshot);
+            var jsonBuf = RegressionGamesJsonFormat.Serialize(action.Snapshot);
             var saveJsonTask = File.WriteAllTextAsync(outputJson, jsonBuf);
 
             // Wait for both tasks to complete

@@ -88,7 +88,7 @@ namespace RegressionGames.Unity.Recording
     /// This snapshot is not coupled to the live game objects and can be stored safely between frames.
     /// </summary>
     [Serializable]
-    public class EntitySnapshot
+    public class EntitySnapshot: ISerializationCallbackReceiver
     {
 
         /// <summary>The ID of the entity.</summary>
@@ -141,7 +141,18 @@ namespace RegressionGames.Unity.Recording
                 entity.Actions.Values.Select(ActionSnapshot.Create).ToList(),
                 entity.GetState().ToList());
         }
+
+        public void OnBeforeSerialize()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnAfterDeserialize()
+        {
+            throw new NotImplementedException();
+        }
     }
+
 
     /// <summary>
     /// A snapshot of the state of a single action on an entity in the game.
