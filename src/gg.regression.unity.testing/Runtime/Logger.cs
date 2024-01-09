@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace RegressionGames.Unity
 {
@@ -25,7 +26,7 @@ namespace RegressionGames.Unity
             return new Logger(category);
         }
 
-        public static Logger<T> For<T>(T instance) where T: UnityEngine.Object
+        public static Logger<T> For<T>(T instance) where T: Object
         {
             return new Logger<T>(instance);
         }
@@ -35,19 +36,19 @@ namespace RegressionGames.Unity
         public void Error(string message) => Debug.LogError(FormatMessage(message));
         public void Exception(Exception ex) => Debug.LogException(ex);
 
-        public void Info(string message, UnityEngine.Object? context) => Debug.Log(FormatMessage(message), context);
-        public void Warning(string message, UnityEngine.Object? context) => Debug.LogWarning(FormatMessage(message), context);
-        public void Error(string message, UnityEngine.Object? context) => Debug.LogError(FormatMessage(message), context);
-        public void Exception(Exception ex, UnityEngine.Object? context) => Debug.LogException(ex, context);
+        public void Info(string message, Object context) => Debug.Log(FormatMessage(message), context);
+        public void Warning(string message, Object context) => Debug.LogWarning(FormatMessage(message), context);
+        public void Error(string message, Object context) => Debug.LogError(FormatMessage(message), context);
+        public void Exception(Exception ex, Object context) => Debug.LogException(ex, context);
 
         // TODO: Make this filterable.
         public void Verbose(string message) => Debug.Log(FormatMessage(message));
-        public void Verbose(string message, UnityEngine.Object context) => Debug.Log(FormatMessage(message), context);
+        public void Verbose(string message, Object context) => Debug.Log(FormatMessage(message), context);
 
         string FormatMessage(string message) => $"[{m_Category}] {message}";
     }
 
-    internal readonly struct Logger<T>: ILogger where T : UnityEngine.Object
+    internal readonly struct Logger<T>: ILogger where T : Object
     {
         private readonly T m_Instance;
         private readonly string m_Category;
@@ -63,14 +64,14 @@ namespace RegressionGames.Unity
         public void Error(string message) => Debug.LogError(FormatMessage(message), m_Instance);
         public void Exception(Exception ex) => Debug.LogException(ex, m_Instance);
 
-        public void Info(string message, UnityEngine.Object? context) => Debug.Log(FormatMessage(message), context);
-        public void Warning(string message, UnityEngine.Object? context) => Debug.LogWarning(FormatMessage(message), context);
-        public void Error(string message, UnityEngine.Object? context) => Debug.LogError(FormatMessage(message), context);
-        public void Exception(Exception ex, UnityEngine.Object? context) => Debug.LogException(ex, context);
+        public void Info(string message, Object context) => Debug.Log(FormatMessage(message), context);
+        public void Warning(string message, Object context) => Debug.LogWarning(FormatMessage(message), context);
+        public void Error(string message, Object context) => Debug.LogError(FormatMessage(message), context);
+        public void Exception(Exception ex, Object context) => Debug.LogException(ex, context);
 
         // TODO: Make this filterable.
         public void Verbose(string message) => Debug.Log(FormatMessage(message), m_Instance);
-        public void Verbose(string message, UnityEngine.Object? context) => Debug.Log(FormatMessage(message), context);
+        public void Verbose(string message, Object context) => Debug.Log(FormatMessage(message), context);
 
         string FormatMessage(string message) => $"[{m_Category}] {message}";
     }

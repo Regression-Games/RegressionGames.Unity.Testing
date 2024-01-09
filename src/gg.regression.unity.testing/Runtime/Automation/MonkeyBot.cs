@@ -1,6 +1,5 @@
 using System.Linq;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace RegressionGames.Unity.Automation
 {

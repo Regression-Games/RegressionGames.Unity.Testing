@@ -19,13 +19,13 @@ namespace RegressionGames.Unity.Discovery
         protected override IEnumerable<AutomationEntity> DiscoverEntities()
         {
             m_Log.Verbose("Scanning for UI elements...");
-            var uiBehaviours = FindObjectsOfType<Selectable>();
+            var uiBehaviours = FindAutomatableComponentsOfType<Selectable>();
             foreach (var uiBehaviour in uiBehaviours)
             {
                 yield return new UISelectableEntity(uiBehaviour);
             }
 
-            var canvasGroups = FindObjectsOfType<CanvasGroup>();
+            var canvasGroups = FindAutomatableComponentsOfType<CanvasGroup>();
             foreach (var canvasGroup in canvasGroups)
             {
                 yield return new UIGroupEntity(canvasGroup);
@@ -83,7 +83,6 @@ namespace RegressionGames.Unity.Discovery
                     new PointerEventData(EventSystem.current),
                     (h, d) => h.OnPointerClick((PointerEventData)d));
             }
-
         }
     }
 }

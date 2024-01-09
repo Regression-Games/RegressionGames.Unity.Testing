@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using RegressionGames.Unity.Automation;
+using UnityEditor;
 using UnityEngine;
 
 namespace RegressionGames.Unity.Recording
@@ -16,32 +17,52 @@ namespace RegressionGames.Unity.Recording
         private readonly Logger<AutomationRecorder> m_Log;
         private readonly List<RecordingSession> m_ActiveSessions = new();
 
+        [SerializeField]
+        [Tooltip(
+            "The directory in which recordings will be saved. A relative path will be considered relative to the persistent data path. If not specified, a default directory will be used.")]
+        private string recordingDirectory;
+
+        private void Start()
+        {
+        }
+
         public AutomationRecorder()
         {
             m_Log = Logger.For(this);
         }
 
-        protected override void Awake()
-        {
-            base.Awake();
-
-            // TODO: Don't start recording automatically. We should have a way to start/stop recording from the UI.
-            StartRecordingSession();
-        }
-
-        public RecordingSession StartRecordingSession()
+        public RecordingSession StartRecordingSession(string name)
         {
             // Generate a session ID for this recording.
-            var sessionId = System.Guid.NewGuid().ToString();
+            var sessionId = Guid.NewGuid();
             var sessionDirectory = Path.Combine(
-                Application.persistentDataPath,
-                "RegressionGames",
-                "Recordings",
-                sessionId);
-            var session = new RecordingSession(this,sessionId, sessionDirectory);
-            m_Log.Info($"Starting recording session {sessionId}. Recording to {sessionDirectory}");
+                GetRecordingDirectory(),
+                sessionId.ToString("N"));
+            var archivePath = Path.Combine(
+                GetRecordingDirectory(),
+                $"{sessionId:N}.rgrec.zip");
+            var session = new RecordingSession(this, sessionId, name, sessionDirectory, archivePath);
+            m_Log.Info($"Starting recording session {sessionId:N}. Recording to {sessionDirectory}");
             m_ActiveSessions.Add(session);
             return session;
+        }
+
+        public string GetRecordingDirectory()
+        {
+            var dir = recordingDirectory;
+            if (string.IsNullOrEmpty(dir))
+            {
+                dir = Path.Combine(
+                    Application.persistentDataPath,
+                    "RegressionGames",
+                    "Recordings");
+            }
+            else if (!Path.IsPathRooted(dir))
+            {
+                dir = Path.Combine(Application.persistentDataPath, dir);
+            }
+
+            return dir;
         }
 
         private void OnDestroy()
@@ -50,6 +71,7 @@ namespace RegressionGames.Unity.Recording
             {
                 session.UnsafeStopFromRecorder();
             }
+
             m_ActiveSessions.Clear();
         }
 
@@ -90,5 +112,35 @@ namespace RegressionGames.Unity.Recording
         {
             m_ActiveSessions.Remove(session);
         }
+
+#if UNITY_EDITOR
+        [ContextMenu("Open Recording Directory")]
+        public void OpenRecordingsDirectory()
+        {
+            // Find the recorder in the active scene
+            var recorder = FindObjectOfType<AutomationRecorder>();
+            if (recorder == null)
+            {
+                EditorUtility.DisplayDialog(
+                    "No Recorder Found",
+                    "No AutomationRecorder component was found in the active scene.",
+                    "OK");
+                return;
+            }
+
+            var recordingDir = recorder.GetRecordingDirectory();
+            if(string.IsNullOrEmpty(recordingDir))
+            {
+                EditorUtility.DisplayDialog(
+                    "No Recording Directory",
+                    "The AutomationRecorder component in the active scene does not have a recording directory specified.",
+                    "OK");
+                return;
+            }
+
+            // Open the directory
+            EditorUtilities.OpenFileBrowser(recordingDir);
+        }
+#endif
     }
 }

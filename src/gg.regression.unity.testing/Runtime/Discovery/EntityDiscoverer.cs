@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using RegressionGames.Unity.Automation;
+using UnityEngine;
 
 namespace RegressionGames.Unity.Discovery
 {
@@ -35,5 +35,33 @@ namespace RegressionGames.Unity.Discovery
         }
 
         protected virtual IEnumerable<AutomationEntity> DiscoverEntities() => Enumerable.Empty<AutomationEntity>();
+
+        protected IEnumerable<T> FindAutomatableComponentsOfType<T>() where T : Component
+        {
+            var components = FindObjectsOfType<T>();
+            return components.Where(IsAutomatable);
+        }
+
+        protected bool IsAutomatable(Component component)
+        {
+            // First off, check for an Automatable component on the game object itself
+            var automatable = component.GetComponent<Automatable>();
+            if (automatable != null)
+            {
+                // There is one, so it's isAutomatable property determines whether this component is automatable.
+                return automatable.isAutomatable;
+            }
+
+            // Now, scan for the first parent that has an Automatable component.
+            var parentAutomatable = component.GetComponentInParent<Automatable>();
+            if (parentAutomatable != null)
+            {
+                // There is one, so it's childrenAreAutomatable property determines whether this component is automatable.
+                return parentAutomatable.childrenAreAutomatable;
+            }
+
+            // By default, we assume that the component is automatable.
+            return true;
+        }
     }
 }

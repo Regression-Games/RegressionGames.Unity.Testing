@@ -10,6 +10,8 @@ namespace RegressionGames.Unity.Recording
 {
     internal class RecorderWorker
     {
+        private readonly string m_SessionId;
+        private readonly string m_SessionName;
         private readonly string m_SessionDirectory;
         private readonly Thread m_RecorderThread;
         private readonly CancellationTokenSource m_StopRequested;
@@ -17,8 +19,10 @@ namespace RegressionGames.Unity.Recording
 
         public bool IsRunning => !m_StopRequested.IsCancellationRequested;
 
-        public RecorderWorker(string sessionDirectory)
+        public RecorderWorker(string sessionId, string sessionName, string sessionDirectory)
         {
+            m_SessionId = sessionId;
+            m_SessionName = sessionName;
             m_SessionDirectory = sessionDirectory;
 
             // TODO: Multiple sessions could share a thread, since they record the same data.
@@ -31,7 +35,6 @@ namespace RegressionGames.Unity.Recording
                 catch (OperationCanceledException)
                 {
                     // OCE is not an error, it's just a signal that we should stop.
-                    return;
                 }
             })
             {
@@ -65,6 +68,17 @@ namespace RegressionGames.Unity.Recording
 
         void Main()
         {
+            if (!Directory.Exists(m_SessionDirectory))
+            {
+                Directory.CreateDirectory(m_SessionDirectory);
+            }
+
+            // Record the recording metadata file
+            var info = RecordingInfo.Create(m_SessionId, m_SessionName);
+            var infoJson = JsonUtility.ToJson(info);
+            var infoPath = Path.Combine(m_SessionDirectory, "recording.json");
+            File.WriteAllText(infoPath, infoJson);
+
             while (!m_StopRequested.IsCancellationRequested)
             {
                 var action = m_Work.Take(m_StopRequested.Token);
@@ -74,11 +88,6 @@ namespace RegressionGames.Unity.Recording
 
         private void PerformAction(FrameRecordAction action)
         {
-            if (!Directory.Exists(m_SessionDirectory))
-            {
-                Directory.CreateDirectory(m_SessionDirectory);
-            }
-
             // Save the screenshot to a PNG file
             var savePngTask = Task.CompletedTask;
             if (action.ScreenshotBytes is {} pngBuf)
