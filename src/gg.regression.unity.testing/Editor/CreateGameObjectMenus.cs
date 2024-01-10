@@ -4,7 +4,6 @@ using RegressionGames.Unity.Automation;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Object = UnityEngine.Object;
 
 namespace RegressionGames.Unity
 {
@@ -15,6 +14,9 @@ namespace RegressionGames.Unity
         [MenuItem("GameObject/Regression Games/Automation Controller", priority = MenuPriority)]
         static void CreateAutomationController(MenuCommand context) =>
             InstantiatePrefab(context, "AutomationController", "Automation Controller", false);
+
+        [MenuItem("GameObject/Regression Games/Automation Recorder", priority = MenuPriority)]
+        static void CreateAutomationRecorder(MenuCommand context) => InstantiatePrefab(context, "AutomationRecorder", "Automation Recorder", true);
 
         [MenuItem("GameObject/Regression Games/Discovery/UI Element Discoverer", priority = MenuPriority)]
         static void CreateUIElementDiscoverer(MenuCommand context) =>

@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using RegressionGames.Unity.Recording;
 using UnityEngine;
 
 namespace RegressionGames.Unity.Automation
@@ -12,9 +14,9 @@ namespace RegressionGames.Unity.Automation
     {
         // TODO: We can "index" entities by other values, like their ID, name or type, to make it easier to find them.
         // For now though, we'll implement those finders by iterating the list, until we have a need to optimize.
-        private readonly List<IAutomationEntity> m_Entities = new();
+        private readonly List<AutomationEntity> m_Entities = new();
 
-        public IReadOnlyList<IAutomationEntity> Entities => m_Entities;
+        public IReadOnlyList<AutomationEntity> Entities => m_Entities;
 
         private readonly Logger<AutomationController> m_Log;
 
@@ -23,12 +25,14 @@ namespace RegressionGames.Unity.Automation
             m_Log = Logger.For(this);
         }
 
-        public void RegisterEntity(IAutomationEntity entity)
+        public void RegisterEntity(AutomationEntity entity)
         {
+            // We need to wrap the entity in a proxy that allows us to monitor what's going on with it.
+            entity.SetAutomationController(this);
             m_Entities.Add(entity);
         }
 
-        public void UnregisterEntity(IAutomationEntity entity)
+        public void UnregisterEntity(AutomationEntity entity)
         {
             m_Entities.Remove(entity);
         }
