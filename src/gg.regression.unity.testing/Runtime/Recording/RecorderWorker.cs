@@ -75,7 +75,7 @@ namespace RegressionGames.Unity.Recording
 
             // Record the recording metadata file
             var info = RecordingInfo.Create(m_SessionId, m_SessionName);
-            var infoJson = JsonUtility.ToJson(info);
+            var infoJson = RegressionGamesJsonFormat.Serialize(info);
             var infoPath = Path.Combine(m_SessionDirectory, "recording.json");
             File.WriteAllText(infoPath, infoJson);
 
