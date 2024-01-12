@@ -1,4 +1,7 @@
 {
   "name": "RegressionGames.Unity",
-  "rootNamespace": "RegressionGames.Unity"
+  "rootNamespace": "RegressionGames.Unity",
+  "references": [
+    "Unity.TextMeshPro"
+  ]
 }

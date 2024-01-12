@@ -16,13 +16,20 @@ namespace RegressionGames.Unity.Automation
         // For now though, we'll implement those finders by iterating the list, until we have a need to optimize.
         private readonly List<AutomationEntity> m_Entities = new();
 
+        [Tooltip("Bots that can be spawned in the scene by this controller.")]
+        public Bot[] availableBots;
+
         public IReadOnlyList<AutomationEntity> Entities => m_Entities;
 
-        private readonly Logger<AutomationController> m_Log;
+        public Bot[] GetAllBots() => GetComponentsInChildren<Bot>(includeInactive: true);
 
-        public AutomationController()
+        public Bot Spawn(Bot bot)
         {
-            m_Log = Logger.For(this);
+            var spawned = Instantiate(bot, transform);
+            var instanceId = Guid.NewGuid();
+            spawned.gameObject.name = $"{bot.name} (Instance: {instanceId:N})";
+            spawned.Initialize(instanceId);
+            return spawned;
         }
 
         public void RegisterEntity(AutomationEntity entity)

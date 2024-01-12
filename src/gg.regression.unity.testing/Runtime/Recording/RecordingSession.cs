@@ -1,4 +1,6 @@
-using UnityEngine;
+using System;
+using System.IO.Compression;
+using UnityEngine.Windows;
 
 namespace RegressionGames.Unity.Recording
 {
@@ -7,18 +9,45 @@ namespace RegressionGames.Unity.Recording
         private readonly Logger m_Log;
         private readonly RecorderWorker m_RecorderWorker;
         private readonly AutomationRecorder m_Recorder;
-        private readonly string m_SessionId;
-        private readonly string m_SessionDirectory;
+        private readonly Guid m_Id;
+        private readonly string m_Name;
+        private readonly string m_Directory;
+        private readonly string m_ArchivePath;
+        private bool m_RecordingSaved;
 
-        internal RecordingSession(AutomationRecorder recorder, string sessionId, string sessionDirectory)
+        /// <summary>
+        /// Gets the ID of the recording session.
+        /// </summary>
+        public Guid Id => m_Id;
+
+        /// <summary>
+        /// Gets the directory in which data from the recording is being written.
+        /// When the recording has stopped, this directory may be deleted and the data moved to <see cref="ArchivePath"/>.
+        /// </summary>
+        public string Directory => m_Directory;
+
+        /// <summary>
+        /// Gets the path to the '.zip' archive containing all the data from the recording.
+        /// This will be null until the recording has stopped and saved to the archive.
+        /// </summary>
+        public string ArchivePath => m_RecordingSaved ? m_ArchivePath : null;
+
+        /// <summary>
+        /// Gets a boolean indicating if the recording is running or if it has stopped.
+        /// </summary>
+        public bool IsRecording => m_RecorderWorker.IsRunning;
+
+        internal RecordingSession(AutomationRecorder recorder, Guid id, string name, string directory, string archivePath)
         {
             m_Log = Logger.For(typeof(RecordingSession).FullName);
             m_Recorder = recorder;
-            m_SessionId = sessionId;
-            m_SessionDirectory = sessionDirectory;
+            m_Id = id;
+            m_Name = name;
+            m_Directory = directory;
+            m_ArchivePath = archivePath;
 
             // Spawn the recorder background thread.
-            m_RecorderWorker = new RecorderWorker(m_SessionDirectory);
+            m_RecorderWorker = new RecorderWorker(m_Id.ToString("N"), m_Name, m_Directory);
             m_RecorderWorker.Start();
         }
 
@@ -41,11 +70,24 @@ namespace RegressionGames.Unity.Recording
         /// <summary>
         /// Stops the session without notifying the recorder.
         /// This is done to avoid issues when the session is stopped by the recorder itself.
+        /// "Unsafe" because it should only be used by the recorder.
         /// </summary>
         internal void UnsafeStopFromRecorder()
         {
             m_RecorderWorker.Stop();
-            m_Log.Info($"Recording stopped. Data is available in {m_SessionDirectory}");
+
+            // Save the recording to a new archive at m_ArchivePath
+            if (File.Exists(m_ArchivePath))
+            {
+                m_Log.Warning($"Recording archive {m_ArchivePath} already exists. Deleting.");
+                File.Delete(m_ArchivePath);
+            }
+            ZipFile.CreateFromDirectory(m_Directory, m_ArchivePath);
+
+            // Delete the session directory
+            UnityEngine.Windows.Directory.Delete(m_Directory);
+            m_RecordingSaved = true;
+            m_Log.Info($"Recording complete. Archive saved to {m_Directory}.");
         }
     }
 }

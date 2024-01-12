@@ -76,10 +76,10 @@ namespace RegressionGames.Unity.Recording
         public static FrameInfo ForCurrentFrame()
         {
             return new(
-                UnityEngine.Time.frameCount,
-                UnityEngine.Time.time,
-                UnityEngine.Time.timeScale,
-                UnityEngine.Time.deltaTime);
+                Time.frameCount,
+                Time.time,
+                Time.timeScale,
+                Time.deltaTime);
         }
     }
 

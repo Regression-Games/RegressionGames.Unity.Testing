@@ -25,6 +25,9 @@ namespace RegressionGames.Unity
         [MenuItem("GameObject/Regression Games/Bots/Monkey Bot", priority = MenuPriority)]
         static void CreateMonkeyBot(MenuCommand context) => InstantiatePrefab(context, "MonkeyBot", "Monkey Bot", true);
 
+        [MenuItem("GameObject/Regression Games/UI Overlay", priority = MenuPriority)]
+        static void CreateUIOverlay(MenuCommand context) => InstantiatePrefab(context, "AutomationUIOverlay", "RegressionGames UI Overlay", false);
+
         static void InstantiatePrefab(MenuCommand context, string prefabName, string name, bool parentToAutomationController)
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(
