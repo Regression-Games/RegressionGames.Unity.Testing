@@ -1,0 +1,18 @@
+using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
+using RegressionGames.Unity.Automation;
+using RegressionGames.Unity.Discovery;
+using UnityEngine;
+
+namespace #NAMESPACE#
+{
+    public class #SCRIPTNAME# : EntityDiscoverer
+    {
+        protected override IEnumerable<AutomationEntity> DiscoverEntities()
+        {
+            // TODO: Discover entities here.
+            yield break;
+        }
+    }
+}

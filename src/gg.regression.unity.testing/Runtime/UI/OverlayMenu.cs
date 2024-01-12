@@ -18,10 +18,17 @@ namespace RegressionGames.Unity.UI
         private readonly Dictionary<Guid, RecordingSession> m_RecordingSessionsByBotInstance = new();
         private readonly Logger<OverlayMenu> m_Log;
 
+        [HideInInspector]
         public GameObject overlayPanel;
+        [HideInInspector]
         public GameObject botListRoot;
+        [HideInInspector]
         public GameObject botListEntryPrefab;
+        [HideInInspector]
         public TMP_Dropdown nextBotDropdown;
+
+        [Tooltip("Bots that can be spawned in the scene by this controller.")]
+        public Bot[] availableBots;
 
         public OverlayMenu()
         {
@@ -53,7 +60,7 @@ namespace RegressionGames.Unity.UI
                 return;
             }
 
-            var bot = automationController.availableBots[nextBotDropdown.value];
+            var bot = availableBots[nextBotDropdown.value];
             if (bot == null)
             {
                 return;
@@ -130,11 +137,11 @@ namespace RegressionGames.Unity.UI
             }
 
             // Build a list of available bots
-            var availableBots = automationController.availableBots
+            var availableBotOptions = availableBots
                 .Select(b => new TMP_Dropdown.OptionData(b.name))
                 .OrderBy(s => s)
                 .ToList();
-            nextBotDropdown.options = availableBots;
+            nextBotDropdown.options = availableBotOptions;
 
             // Update the list of active bots
             var bots = automationController.GetAllBots();

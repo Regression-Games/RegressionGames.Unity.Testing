@@ -962,6 +962,10 @@ PrefabInstance:
       propertyPath: availableBots.Array.data[0]
       value: 
       objectReference: {fileID: 2263835764165809147, guid: cc55d9a0603764feaab6ec07edba0e80, type: 3}
+    - target: {fileID: 1791510578999917186, guid: 51000bb6e98f8490da0c727627912430, type: 3}
+      propertyPath: availableBots.Array.data[1]
+      value: 
+      objectReference: {fileID: 7358914062618685663, guid: 7b4b271bc479a4b54acfe49c8e55bad6, type: 3}
     - target: {fileID: 5756155928033506571, guid: 51000bb6e98f8490da0c727627912430, type: 3}
       propertyPath: m_Name
       value: Automation Controller
