@@ -1,4 +1,5 @@
 using System;
+using RegressionGames.Unity.Recording;
 using UnityEngine;
 
 namespace RegressionGames.Unity.Automation
@@ -8,7 +9,7 @@ namespace RegressionGames.Unity.Automation
     /// </summary>
     public abstract class AutomationBehavior: MonoBehaviour
     {
-        AutomationController m_AutomationController;
+        private AutomationController m_AutomationController;
 
         protected AutomationController AutomationController => m_AutomationController;
 

@@ -24,6 +24,9 @@ namespace RegressionGames.Unity.Automation
         {
             base.Awake();
             m_LastActivation = Time.time;
+
+            // Request a screenshot on our first frame.
+            AutomationController.RequestScreenshot(0);
         }
 
         private void Update()
@@ -51,6 +54,9 @@ namespace RegressionGames.Unity.Automation
             // Select a random action and activate it.
             var action = availableActions[Random.Range(0, availableActions.Count)];
             action.Activate();
+
+            // Request a screenshot next frame
+            AutomationController.RequestScreenshot(delayInFrames: 1);
         }
     }
 }

@@ -19,6 +19,9 @@ namespace RegressionGames.Unity.Automation
         [Tooltip("Bots that can be spawned in the scene by this controller.")]
         public Bot[] availableBots;
 
+        [HideInInspector]
+        public AutomationRecorder automationRecorder;
+
         public IReadOnlyList<AutomationEntity> Entities => m_Entities;
 
         public Bot[] GetAllBots() => GetComponentsInChildren<Bot>(includeInactive: true);
@@ -42,6 +45,14 @@ namespace RegressionGames.Unity.Automation
         public void UnregisterEntity(AutomationEntity entity)
         {
             m_Entities.Remove(entity);
+        }
+
+        public void RequestScreenshot(int delayInFrames = 0)
+        {
+            if(automationRecorder != null)
+            {
+                automationRecorder.RequestScreenshot(delayInFrames);
+            }
         }
     }
 }

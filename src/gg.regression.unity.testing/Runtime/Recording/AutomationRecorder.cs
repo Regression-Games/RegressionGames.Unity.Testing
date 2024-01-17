@@ -17,18 +17,25 @@ namespace RegressionGames.Unity.Recording
         private readonly Logger<AutomationRecorder> m_Log;
         private readonly List<RecordingSession> m_ActiveSessions = new();
 
+        private HashSet<int> m_ScreenshotRequests = new HashSet<int>();
+
         [SerializeField]
         [Tooltip(
             "The directory in which recordings will be saved. A relative path will be considered relative to the persistent data path. If not specified, a default directory will be used.")]
         private string recordingDirectory;
 
-        private void Start()
-        {
-        }
-
         public AutomationRecorder()
         {
             m_Log = Logger.For(this);
+        }
+
+        /// <summary>
+        /// Requests that a screenshot be taken in the specified number of frames.
+        /// </summary>
+        /// <param name="delayInFrames">The number of frames to wait before taking a screenshot. Defaults to '0' which means a screenshot will be recorded THIS frame.</param>
+        public void RequestScreenshot(int delayInFrames = 0)
+        {
+            m_ScreenshotRequests.Add(Time.frameCount + delayInFrames);
         }
 
         public RecordingSession StartRecordingSession(string name)
@@ -96,16 +103,25 @@ namespace RegressionGames.Unity.Recording
                 FrameInfo.ForCurrentFrame(),
                 AutomationController.Entities);
 
-            // Take a screenshot
-            // TODO: Make this optional, per session. Then only capture the screenshot if an active session wants it.
-            var texture = ScreenCapture.CaptureScreenshotAsTexture();
-            var screenshotBytes = texture.EncodeToPNG();
+            // Take a screenshot if someone requested it.
+            var screenshotBytes = TakeScreenshotIfRequested();
 
             // Send it to all active sessions
             foreach (var session in m_ActiveSessions)
             {
                 session.Record(screenshotBytes, snapshot);
             }
+        }
+
+        private byte[] TakeScreenshotIfRequested()
+        {
+            if (m_ScreenshotRequests.Remove(Time.frameCount))
+            {
+                var texture = ScreenCapture.CaptureScreenshotAsTexture();
+                return texture.EncodeToPNG();
+            }
+
+            return null;
         }
 
         internal void StopSession(RecordingSession session)
