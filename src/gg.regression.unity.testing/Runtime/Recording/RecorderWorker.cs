@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -13,17 +14,21 @@ namespace RegressionGames.Unity.Recording
         private readonly string m_SessionId;
         private readonly string m_SessionName;
         private readonly string m_SessionDirectory;
+        private readonly bool m_SaveOnlyOnChanged;
         private readonly Thread m_RecorderThread;
         private readonly CancellationTokenSource m_StopRequested;
         private readonly BlockingCollection<FrameRecordAction> m_Work = new(new ConcurrentQueue<FrameRecordAction>());
 
+        private FrameSnapshot m_LastSnapshot;
+
         public bool IsRunning => !m_StopRequested.IsCancellationRequested;
 
-        public RecorderWorker(string sessionId, string sessionName, string sessionDirectory)
+        public RecorderWorker(string sessionId, string sessionName, string sessionDirectory, bool saveOnlyOnChanged)
         {
             m_SessionId = sessionId;
             m_SessionName = sessionName;
             m_SessionDirectory = sessionDirectory;
+            m_SaveOnlyOnChanged = saveOnlyOnChanged;
 
             // TODO: Multiple sessions could share a thread, since they record the same data.
             m_RecorderThread = new Thread(() =>
@@ -90,19 +95,44 @@ namespace RegressionGames.Unity.Recording
         {
             // Save the screenshot to a PNG file
             var savePngTask = Task.CompletedTask;
-            if (action.ScreenshotBytes is {} pngBuf)
+            if (action.ScreenshotBytes is { } pngBuf)
             {
                 var outputPng = Path.Combine(m_SessionDirectory, $"screenshot.{action.Snapshot.frame.frameCount}.png");
                 savePngTask = File.WriteAllBytesAsync(outputPng, pngBuf);
             }
 
-            // Serialize the snapshot to JSON and save it
-            var outputJson = Path.Combine(m_SessionDirectory, $"snapshot.{action.Snapshot.frame.frameCount}.json");
-            var jsonBuf = RegressionGamesJsonFormat.Serialize(action.Snapshot);
-            var saveJsonTask = File.WriteAllTextAsync(outputJson, jsonBuf);
+            // Check if the entities in the new snapshot differ from the previous snapshot.
+            // If not, don't bother saving this frame.
+            // We can't just check the frame snapshot itself, because the frame number _always_ changes.
+            var saveJsonTask = Task.CompletedTask;
+            if (ShouldSaveSnapshot(action))
+            {
+                // Serialize the snapshot to JSON and save it
+                var outputJson = Path.Combine(m_SessionDirectory, $"snapshot.{action.Snapshot.frame.frameCount}.json");
+                var jsonBuf = RegressionGamesJsonFormat.Serialize(action.Snapshot);
+                saveJsonTask = File.WriteAllTextAsync(outputJson, jsonBuf);
+            }
+
+            // Remember this snapshot to diff it to the next one.
+            m_LastSnapshot = action.Snapshot;
 
             // Wait for both tasks to complete
             Task.WaitAll(savePngTask, saveJsonTask);
+        }
+
+        private bool ShouldSaveSnapshot(FrameRecordAction action)
+        {
+            if (!m_SaveOnlyOnChanged)
+            {
+                return true;
+            }
+
+            if (m_LastSnapshot == null)
+            {
+                return true;
+            }
+
+            return !m_LastSnapshot.entities.SequenceEqual(action.Snapshot.entities);
         }
 
         internal class FrameRecordAction
