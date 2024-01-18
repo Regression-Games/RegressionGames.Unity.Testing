@@ -112,35 +112,5 @@ namespace RegressionGames.Unity.Recording
         {
             m_ActiveSessions.Remove(session);
         }
-
-#if UNITY_EDITOR
-        [ContextMenu("Open Recording Directory")]
-        public void OpenRecordingsDirectory()
-        {
-            // Find the recorder in the active scene
-            var recorder = FindObjectOfType<AutomationRecorder>();
-            if (recorder == null)
-            {
-                EditorUtility.DisplayDialog(
-                    "No Recorder Found",
-                    "No AutomationRecorder component was found in the active scene.",
-                    "OK");
-                return;
-            }
-
-            var recordingDir = recorder.GetRecordingDirectory();
-            if(string.IsNullOrEmpty(recordingDir))
-            {
-                EditorUtility.DisplayDialog(
-                    "No Recording Directory",
-                    "The AutomationRecorder component in the active scene does not have a recording directory specified.",
-                    "OK");
-                return;
-            }
-
-            // Open the directory
-            EditorUtilities.OpenFileBrowser(recordingDir);
-        }
-#endif
     }
 }
