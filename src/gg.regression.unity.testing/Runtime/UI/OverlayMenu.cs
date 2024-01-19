@@ -18,14 +18,31 @@ namespace RegressionGames.Unity.UI
         private readonly Dictionary<Guid, RecordingSession> m_RecordingSessionsByBotInstance = new();
         private readonly Logger<OverlayMenu> m_Log;
 
+        [HideInInspector]
         public GameObject overlayPanel;
+        [HideInInspector]
         public GameObject botListRoot;
+        [HideInInspector]
         public GameObject botListEntryPrefab;
+        [HideInInspector]
         public TMP_Dropdown nextBotDropdown;
+
+        public Bot[] availableBots;
+
+        [Tooltip("If true, the UI overlay will automatically set 'DontDestroyOnLoad' on itself when spawned.")]
+        public bool dontDestroyOnLoad = true;
 
         public OverlayMenu()
         {
             m_Log = Logger.For(this);
+        }
+
+        private void Awake()
+        {
+            if (dontDestroyOnLoad)
+            {
+                DontDestroyOnLoad(this.gameObject);
+            }
         }
 
         private void Start()
