@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using RegressionGames.Unity.Automation;
 using UnityEngine;
-using UnityEngine.Experimental.AI;
 using UnityEngine.SceneManagement;
 
 namespace RegressionGames.Unity.Recording
@@ -38,19 +37,6 @@ namespace RegressionGames.Unity.Recording
         }
 
         /// <summary>
-        /// Creates a <see cref="FrameSnapshot"/> representing the current state of the game.
-        /// </summary>
-        /// <param name="frame">A <see cref="FrameInfo"/> representing the current frame.</param>
-        /// <param name="entities">The <see cref="AutomationEntity"/> objects in the game.</param>
-        /// <returns>A <see cref="FrameSnapshot"/> that can be stored safely between frames.</returns>
-        public static FrameSnapshot Create(FrameInfo frame, SceneInfo activeScene, IEnumerable<AutomationEntity> entities)
-        {
-            // Make sure we always store the entities in the same order, it makes it easier to compare snapshots.
-            var entitySnapshots = entities.Select(EntitySnapshot.Create).OrderBy(s => s.id).ToList();
-            return new(frame, activeScene, entitySnapshots);
-        }
-
-        /// <summary>
         /// Compares this snapshot to another snapshot and returns a boolean indicating if this snapshot has changed since the other snapshot.
         /// This comparison ignores the <see cref="frame"/> field, because it is expected that the frame will always change.
         /// </summary>
@@ -72,25 +58,24 @@ namespace RegressionGames.Unity.Recording
         public string name;
 
         /// <summary>
-        /// The path to the scene.
+        /// The path to the scene file.
         /// </summary>
         public string path;
 
-        private SceneInfo(string name, string path)
+        public static SceneInfo ForCurrentScene() => Create(SceneManager.GetActiveScene());
+
+        private static SceneInfo Create(Scene scene)
         {
-            this.name = name;
-            this.path = path;
+            return new()
+            {
+                name = scene.name,
+                path = scene.path,
+            };
         }
 
         public bool Equals(SceneInfo other) => name == other.name && path == other.path;
-
         public override bool Equals(object obj) => obj is SceneInfo other && Equals(other);
-
         public override int GetHashCode() => HashCode.Combine(name, path);
-
-        public static SceneInfo ForActiveScene() => Create(SceneManager.GetActiveScene());
-
-        public static SceneInfo Create(Scene activeScene) => new(activeScene.name, activeScene.path);
     }
 
     [Serializable]
@@ -196,33 +181,6 @@ namespace RegressionGames.Unity.Recording
             this.description = description;
             this.actions = actions;
             this.state = state;
-        }
-
-        /// <summary>
-        /// Creates a <see cref="EntitySnapshot"/> representing the current state of the entity.
-        /// </summary>
-        /// <param name="entity">The <see cref="AutomationEntity"/> to snapshot.</param>
-        /// <returns>An <see cref="EntitySnapshot"/> that can be stored safely between frames.</returns>
-        public static EntitySnapshot Create(AutomationEntity entity)
-        {
-            // Make sure we always store the actions and state in the same order, it makes it easier to compare snapshots.
-            var actionSnapshots = entity.Actions.Values
-                .Select(ActionSnapshot.Create)
-                .OrderBy(s => s.name)
-                .ToList();
-
-            var stateSnapshots = entity.GetState()
-                .OrderBy(s => s.name)
-                .Select(s => new KeyValuePair<string, StateSnapshot>(s.name, new(s.value, s.description)))
-                .ToList();
-
-            return new(
-                entity.Id,
-                entity.Name,
-                entity.Type,
-                entity.Description,
-                actionSnapshots,
-                stateSnapshots);
         }
 
         public bool Equals(EntitySnapshot other)

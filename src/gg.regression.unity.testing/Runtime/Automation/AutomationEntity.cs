@@ -131,8 +131,13 @@ namespace RegressionGames.Unity.Automation
 
         public void Activate()
         {
-            m_LastActivation = new(Time.frameCount);
+            MarkActivated();
             Execute();
+        }
+
+        protected void MarkActivated()
+        {
+            m_LastActivation = new(Time.frameCount);
         }
 
         /// <summary>
@@ -167,6 +172,7 @@ namespace RegressionGames.Unity.Automation
     }
 
     // TODO: Capture arguments here.
+    // TODO: Capture "activators" here, i.e. who actually activated the action (a Bot, a user action, etc.)
     [Serializable]
     public struct AutomationActionActivation
     {

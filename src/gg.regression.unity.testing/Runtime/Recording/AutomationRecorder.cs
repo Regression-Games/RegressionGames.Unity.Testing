@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using RegressionGames.Unity.Automation;
 using UnityEngine;
 
@@ -44,17 +45,20 @@ namespace RegressionGames.Unity.Recording
             m_ScreenshotRequests.Add(Time.frameCount + delayInFrames);
         }
 
-        public RecordingSession StartRecordingSession(string name)
+        public RecordingSession StartRecordingSession(string name, string title)
         {
+            // Make the name file-safe
+            name = string.Join("_", name.Split(Path.GetInvalidFileNameChars()));
+
             // Generate a session ID for this recording.
             var sessionId = Guid.NewGuid();
             var sessionDirectory = Path.Combine(
                 GetRecordingDirectory(),
-                sessionId.ToString("N"));
+                $"{name}.{sessionId:N}");
             var archivePath = Path.Combine(
                 GetRecordingDirectory(),
-                $"{sessionId:N}.rgrec.zip");
-            var session = new RecordingSession(this, sessionId, name, sessionDirectory, archivePath, saveSnapshotsOnlyWhenChanged);
+                $"{name}.{sessionId:N}.rgrec.zip");
+            var session = new RecordingSession(this, sessionId, name, title, sessionDirectory, archivePath, saveSnapshotsOnlyWhenChanged);
             m_Log.Info($"Starting recording session {sessionId:N}. Recording to {sessionDirectory}");
             m_ActiveSessions.Add(session);
             return session;
@@ -114,11 +118,8 @@ namespace RegressionGames.Unity.Recording
                 yield break;
             }
 
-            // Create a frame snapshot
-            var snapshot = FrameSnapshot.Create(
-                FrameInfo.ForCurrentFrame(),
-                SceneInfo.ForActiveScene(),
-                AutomationController.Entities);
+            // Build the frame snapshot
+            var snapshot = BuildFrameSnapshot();
 
             // Take a screenshot if someone requested it.
             var screenshotBytes = TakeScreenshotIfRequested();
@@ -128,6 +129,42 @@ namespace RegressionGames.Unity.Recording
             {
                 session.Record(screenshotBytes, snapshot);
             }
+        }
+
+        private FrameSnapshot BuildFrameSnapshot()
+        {
+            // Builds a frame snapshot, and also takes actions based on things that happened in this snapshot.
+            // For example, as we build the snapshot we track if any actions were activated and if they were, we request a screenshot next frame.
+
+            var entities = new List<EntitySnapshot>();
+            var anyActionActivatedThisFrame = false;
+            foreach(var entity in AutomationController.Entities)
+            {
+                var actions = new List<ActionSnapshot>();
+                foreach (var (name, action) in entity.Actions.OrderBy(p => p.Key))
+                {
+                    anyActionActivatedThisFrame |= action.ActivatedThisFrame;
+                    actions.Add(ActionSnapshot.Create(action));
+                }
+
+                var states = entity.GetState()
+                    .OrderBy(s => s.name)
+                    .Select(s => new KeyValuePair<string, StateSnapshot>(s.name, new(s.value, s.description)))
+                    .ToList();
+
+                entities.Add(new(entity.Id, entity.Name, entity.Type, entity.Description, actions, states));
+            }
+
+            if (anyActionActivatedThisFrame)
+            {
+                // If any action was activated this frame, we want to take a screenshot next frame.
+                RequestScreenshot(1);
+            }
+
+            return new FrameSnapshot(
+                FrameInfo.ForCurrentFrame(),
+                SceneInfo.ForCurrentScene(),
+                entities);
         }
 
         private byte[] TakeScreenshotIfRequested()

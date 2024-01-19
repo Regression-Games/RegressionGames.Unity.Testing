@@ -6,6 +6,7 @@ using RegressionGames.Unity.Recording;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace RegressionGames.Unity.UI
 {
@@ -17,6 +18,7 @@ namespace RegressionGames.Unity.UI
         private readonly Dictionary<Guid, BotListEntry> m_BotListEntries = new();
         private readonly Dictionary<Guid, RecordingSession> m_RecordingSessionsByBotInstance = new();
         private readonly Logger<OverlayMenu> m_Log;
+        private RecordingSession m_ManualRecordingSession;
 
         [HideInInspector]
         public GameObject overlayPanel;
@@ -26,6 +28,12 @@ namespace RegressionGames.Unity.UI
         public GameObject botListEntryPrefab;
         [HideInInspector]
         public TMP_Dropdown nextBotDropdown;
+        [HideInInspector]
+        public Button recordButton;
+        [HideInInspector]
+        public Button stopRecordingButton;
+        [HideInInspector]
+        public TMP_Text activeRecordingText;
 
         [Tooltip("Bots that can be spawned in the scene from this UI.")]
         public Bot[] availableBots;
@@ -63,6 +71,29 @@ namespace RegressionGames.Unity.UI
             overlayPanel.SetActive(false);
         }
 
+        public void OnStartRecordingClick()
+        {
+            if(m_ManualRecordingSession != null)
+            {
+                return;
+            }
+
+            var automationRecorder = FindObjectOfType<AutomationRecorder>();
+            m_ManualRecordingSession = automationRecorder.StartRecordingSession("manual", "Manual Session");
+            overlayPanel.SetActive(false);
+        }
+
+        public void OnStopRecordingClick()
+        {
+            if(m_ManualRecordingSession == null)
+            {
+                return;
+            }
+
+            m_ManualRecordingSession.Stop();
+            m_ManualRecordingSession = null;
+        }
+
         public void OnStartBotClick()
         {
             var automationController = GetAutomationController();
@@ -87,7 +118,7 @@ namespace RegressionGames.Unity.UI
             if (automationRecorder != null && !m_RecordingSessionsByBotInstance.ContainsKey(botInstance.InstanceId))
             {
                 var date = DateTimeOffset.Now.ToString("s");
-                var session = automationRecorder.StartRecordingSession($"Auto-Recording for Bot {botInstance.InstanceId} at {date}");
+                var session = automationRecorder.StartRecordingSession(bot.name, $"Auto-Recording for Bot {botInstance.InstanceId} at {date}");
                 m_RecordingSessionsByBotInstance.Add(botInstance.InstanceId, session);
             }
 
@@ -209,6 +240,20 @@ namespace RegressionGames.Unity.UI
                 var rt = entries[i].GetComponent<RectTransform>();
                 var position = new Vector3(0f, rt.rect.height * -i, 0f);
                 entries[i].transform.localPosition = position;
+            }
+
+            if (m_ManualRecordingSession != null)
+            {
+                stopRecordingButton.gameObject.SetActive(true);
+                recordButton.gameObject.SetActive(false);
+                activeRecordingText.gameObject.SetActive(true);
+                activeRecordingText.text = $"Recording: {m_ManualRecordingSession.Name}.{m_ManualRecordingSession.Id:N}";
+            }
+            else
+            {
+                stopRecordingButton.gameObject.SetActive(false);
+                recordButton.gameObject.SetActive(true);
+                activeRecordingText.gameObject.SetActive(false);
             }
         }
 

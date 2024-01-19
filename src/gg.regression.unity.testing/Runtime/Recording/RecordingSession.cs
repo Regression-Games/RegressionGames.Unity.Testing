@@ -1,6 +1,8 @@
 using System;
+using System.IO;
 using System.IO.Compression;
-using UnityEngine.Windows;
+using System.Linq;
+using File = UnityEngine.Windows.File;
 
 namespace RegressionGames.Unity.Recording
 {
@@ -11,6 +13,7 @@ namespace RegressionGames.Unity.Recording
         private readonly AutomationRecorder m_Recorder;
         private readonly Guid m_Id;
         private readonly string m_Name;
+        private readonly string m_Title;
         private readonly string m_Directory;
         private readonly string m_ArchivePath;
         private bool m_RecordingSaved;
@@ -19,6 +22,11 @@ namespace RegressionGames.Unity.Recording
         /// Gets the ID of the recording session.
         /// </summary>
         public Guid Id => m_Id;
+
+        /// <summary>
+        /// Gets the name of the recording session.
+        /// </summary>
+        public string Name => m_Name;
 
         /// <summary>
         /// Gets the directory in which data from the recording is being written.
@@ -37,17 +45,19 @@ namespace RegressionGames.Unity.Recording
         /// </summary>
         public bool IsRecording => m_RecorderWorker.IsRunning;
 
-        internal RecordingSession(AutomationRecorder recorder, Guid id, string name, string directory, string archivePath, bool saveOnlyOnChanged)
+        internal RecordingSession(AutomationRecorder recorder, Guid id, string name, string title, string directory, string archivePath, bool saveOnlyOnChanged)
         {
             m_Log = Logger.For(typeof(RecordingSession).FullName);
             m_Recorder = recorder;
             m_Id = id;
             m_Name = name;
+            m_Title = title;
             m_Directory = directory;
             m_ArchivePath = archivePath;
 
             // Spawn the recorder background thread.
-            m_RecorderWorker = new RecorderWorker(m_Id.ToString("N"), m_Name, m_Directory, saveOnlyOnChanged);
+            var recordingInfo = RecordingInfo.Create(m_Id.ToString("N"), name, title);
+            m_RecorderWorker = new RecorderWorker(recordingInfo, m_Directory, saveOnlyOnChanged);
             m_RecorderWorker.Start();
         }
 

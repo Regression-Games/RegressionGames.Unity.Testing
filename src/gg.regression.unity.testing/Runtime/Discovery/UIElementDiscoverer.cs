@@ -76,6 +76,13 @@ namespace RegressionGames.Unity.Discovery
             {
                 m_Selectable = selectable;
                 m_Log = Logger.For(typeof(UIClickAction).FullName);
+
+                if (selectable is Button b)
+                {
+                    // This may double-mark the button as activated, but that's fine.
+                    // By doing this, we capture clicks that weren't caused by the bot.
+                    b.onClick.AddListener(MarkActivated);
+                }
             }
 
             public override bool CanActivateThisFrame() => m_Selectable.IsInteractable();
