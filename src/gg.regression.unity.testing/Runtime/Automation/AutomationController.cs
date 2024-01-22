@@ -19,9 +19,20 @@ namespace RegressionGames.Unity.Automation
         [HideInInspector]
         public AutomationRecorder automationRecorder;
 
+        [Tooltip("If true, the controller will automatically set 'DontDestroyOnLoad' on itself when spawned.")]
+        public bool dontDestroyOnLoad = true;
+
         public IReadOnlyList<AutomationEntity> Entities => m_Entities;
 
         public Bot[] GetAllBots() => GetComponentsInChildren<Bot>(includeInactive: true);
+
+        private void Awake()
+        {
+            if (dontDestroyOnLoad)
+            {
+                DontDestroyOnLoad(this.gameObject);
+            }
+        }
 
         public Bot Spawn(Bot bot)
         {

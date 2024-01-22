@@ -30,9 +30,20 @@ namespace RegressionGames.Unity.UI
         [Tooltip("Bots that can be spawned in the scene from this UI.")]
         public Bot[] availableBots;
 
+        [Tooltip("If true, the UI overlay will automatically set 'DontDestroyOnLoad' on itself when spawned.")]
+        public bool dontDestroyOnLoad = true;
+
         public OverlayMenu()
         {
             m_Log = Logger.For(this);
+        }
+
+        private void Awake()
+        {
+            if (dontDestroyOnLoad)
+            {
+                DontDestroyOnLoad(this.gameObject);
+            }
         }
 
         private void Start()
