@@ -72,6 +72,9 @@ namespace RegressionGames.Unity.UI
                 var session = automationRecorder.StartRecordingSession($"Auto-Recording for Bot {botInstance.InstanceId} at {date}");
                 m_RecordingSessionsByBotInstance.Add(botInstance.InstanceId, session);
             }
+
+            // Hide the overlay, since we assume the bot should now be running and we don't want the overlay in the way.
+            overlayPanel.SetActive(false);
         }
 
         public void StopBot(Bot bot)

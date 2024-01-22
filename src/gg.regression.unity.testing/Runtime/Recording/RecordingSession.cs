@@ -37,7 +37,7 @@ namespace RegressionGames.Unity.Recording
         /// </summary>
         public bool IsRecording => m_RecorderWorker.IsRunning;
 
-        internal RecordingSession(AutomationRecorder recorder, Guid id, string name, string directory, string archivePath)
+        internal RecordingSession(AutomationRecorder recorder, Guid id, string name, string directory, string archivePath, bool saveOnlyOnChanged)
         {
             m_Log = Logger.For(typeof(RecordingSession).FullName);
             m_Recorder = recorder;
@@ -47,7 +47,7 @@ namespace RegressionGames.Unity.Recording
             m_ArchivePath = archivePath;
 
             // Spawn the recorder background thread.
-            m_RecorderWorker = new RecorderWorker(m_Id.ToString("N"), m_Name, m_Directory);
+            m_RecorderWorker = new RecorderWorker(m_Id.ToString("N"), m_Name, m_Directory, saveOnlyOnChanged);
             m_RecorderWorker.Start();
         }
 

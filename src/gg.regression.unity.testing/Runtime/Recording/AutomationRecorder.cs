@@ -17,18 +17,32 @@ namespace RegressionGames.Unity.Recording
         private readonly Logger<AutomationRecorder> m_Log;
         private readonly List<RecordingSession> m_ActiveSessions = new();
 
+        private HashSet<int> m_ScreenshotRequests = new();
+        private int m_LastSnapshotFrame = 0;
+
+        [Tooltip("The number of frames between each snapshot. Defaults to '1' which means a snapshot will be taken every frame.")]
+        public int snapshotRate = 1;
+
+        [Tooltip("If true, snapshots will only be saved when they are different from the previous snapshot.")]
+        public bool saveSnapshotsOnlyWhenChanged = true;
+
         [SerializeField]
         [Tooltip(
             "The directory in which recordings will be saved. A relative path will be considered relative to the persistent data path. If not specified, a default directory will be used.")]
         private string recordingDirectory;
 
-        private void Start()
-        {
-        }
-
         public AutomationRecorder()
         {
             m_Log = Logger.For(this);
+        }
+
+        /// <summary>
+        /// Requests that a screenshot be taken in the specified number of frames.
+        /// </summary>
+        /// <param name="delayInFrames">The number of frames to wait before taking a screenshot. Defaults to '0' which means a screenshot will be recorded THIS frame.</param>
+        public void RequestScreenshot(int delayInFrames = 0)
+        {
+            m_ScreenshotRequests.Add(Time.frameCount + delayInFrames);
         }
 
         public RecordingSession StartRecordingSession(string name)
@@ -41,7 +55,7 @@ namespace RegressionGames.Unity.Recording
             var archivePath = Path.Combine(
                 GetRecordingDirectory(),
                 $"{sessionId:N}.rgrec.zip");
-            var session = new RecordingSession(this, sessionId, name, sessionDirectory, archivePath);
+            var session = new RecordingSession(this, sessionId, name, sessionDirectory, archivePath, saveSnapshotsOnlyWhenChanged);
             m_Log.Info($"Starting recording session {sessionId:N}. Recording to {sessionDirectory}");
             m_ActiveSessions.Add(session);
             return session;
@@ -85,6 +99,16 @@ namespace RegressionGames.Unity.Recording
         {
             yield return new WaitForEndOfFrame();
 
+            if (m_LastSnapshotFrame == 0 || Time.frameCount - m_LastSnapshotFrame >= snapshotRate)
+            {
+                m_LastSnapshotFrame = Time.frameCount;
+            }
+            else
+            {
+                // We don't want to take a snapshot this frame.
+                yield break;
+            }
+
             // If there are no active sessions, we can skip the rest of this.
             if (m_ActiveSessions.Count == 0)
             {
@@ -96,16 +120,32 @@ namespace RegressionGames.Unity.Recording
                 FrameInfo.ForCurrentFrame(),
                 AutomationController.Entities);
 
-            // Take a screenshot
-            // TODO: Make this optional, per session. Then only capture the screenshot if an active session wants it.
-            var texture = ScreenCapture.CaptureScreenshotAsTexture();
-            var screenshotBytes = texture.EncodeToPNG();
+            // Take a screenshot if someone requested it.
+            var screenshotBytes = TakeScreenshotIfRequested();
 
             // Send it to all active sessions
             foreach (var session in m_ActiveSessions)
             {
                 session.Record(screenshotBytes, snapshot);
             }
+        }
+
+        private byte[] TakeScreenshotIfRequested()
+        {
+            if (m_ScreenshotRequests.Remove(Time.frameCount))
+            {
+                var texture = ScreenCapture.CaptureScreenshotAsTexture();
+                try
+                {
+                    return texture.EncodeToPNG();
+                }
+                finally
+                {
+                    Destroy(texture);
+                }
+            }
+
+            return null;
         }
 
         internal void StopSession(RecordingSession session)
@@ -117,18 +157,7 @@ namespace RegressionGames.Unity.Recording
         [ContextMenu("Open Recording Directory")]
         public void OpenRecordingsDirectory()
         {
-            // Find the recorder in the active scene
-            var recorder = FindObjectOfType<AutomationRecorder>();
-            if (recorder == null)
-            {
-                EditorUtility.DisplayDialog(
-                    "No Recorder Found",
-                    "No AutomationRecorder component was found in the active scene.",
-                    "OK");
-                return;
-            }
-
-            var recordingDir = recorder.GetRecordingDirectory();
+            var recordingDir = GetRecordingDirectory();
             if(string.IsNullOrEmpty(recordingDir))
             {
                 EditorUtility.DisplayDialog(

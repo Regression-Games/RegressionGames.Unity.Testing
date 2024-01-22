@@ -15,9 +15,6 @@ namespace RegressionGames.Unity
         static void CreateAutomationController(MenuCommand context) =>
             InstantiatePrefab(context, "AutomationController", "Automation Controller", false);
 
-        [MenuItem("GameObject/Regression Games/Automation Recorder", priority = MenuPriority)]
-        static void CreateAutomationRecorder(MenuCommand context) => InstantiatePrefab(context, "AutomationRecorder", "Automation Recorder", true);
-
         [MenuItem("GameObject/Regression Games/Discovery/UI Element Discoverer", priority = MenuPriority)]
         static void CreateUIElementDiscoverer(MenuCommand context) =>
             InstantiatePrefab(context, "UIElementDiscoverer", "UI Element Discoverer", true);

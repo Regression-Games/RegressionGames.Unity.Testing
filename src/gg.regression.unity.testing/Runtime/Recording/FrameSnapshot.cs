@@ -11,7 +11,7 @@ namespace RegressionGames.Unity.Recording
     /// This snapshot is not coupled to the live game objects and can be stored safely between frames.
     /// </summary>
     [Serializable]
-    public class FrameSnapshot
+    public class FrameSnapshot: IEquatable<FrameSnapshot>
     {
         /// <summary>A <see cref="FrameInfo"/> containing basic information about the frame.</summary>
         public FrameInfo frame;
@@ -38,12 +38,34 @@ namespace RegressionGames.Unity.Recording
         /// <returns>A <see cref="FrameSnapshot"/> that can be stored safely between frames.</returns>
         public static FrameSnapshot Create(FrameInfo frame, IEnumerable<AutomationEntity> entities)
         {
-            return new(frame, entities.Select(EntitySnapshot.Create).ToList());
+            // Make sure we always store the entities in the same order, it makes it easier to compare snapshots.
+            var entitySnapshots = entities.Select(EntitySnapshot.Create).OrderBy(s => s.id).ToList();
+            return new(frame, entitySnapshots);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((FrameSnapshot) obj);
+        }
+
+        public bool Equals(FrameSnapshot other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return frame.Equals(other.frame) && entities.SequenceEqual(other.entities);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(frame, entities);
         }
     }
 
     [Serializable]
-    public struct FrameInfo
+    public struct FrameInfo: IEquatable<FrameInfo>
     {
         /// <summary>
         /// The number of frames that have passed since the game started.
@@ -81,6 +103,21 @@ namespace RegressionGames.Unity.Recording
                 Time.timeScale,
                 Time.deltaTime);
         }
+
+        public bool Equals(FrameInfo other)
+        {
+            return frameCount == other.frameCount && time.Equals(other.time) && timeScale.Equals(other.timeScale) && deltaTime.Equals(other.deltaTime);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is FrameInfo other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(frameCount, time, timeScale, deltaTime);
+        }
     }
 
     /// <summary>
@@ -88,7 +125,7 @@ namespace RegressionGames.Unity.Recording
     /// This snapshot is not coupled to the live game objects and can be stored safely between frames.
     /// </summary>
     [Serializable]
-    public class EntitySnapshot: ISerializationCallbackReceiver
+    public class EntitySnapshot: IEquatable<EntitySnapshot>
     {
 
         /// <summary>The ID of the entity.</summary>
@@ -134,22 +171,42 @@ namespace RegressionGames.Unity.Recording
         /// <returns>An <see cref="EntitySnapshot"/> that can be stored safely between frames.</returns>
         public static EntitySnapshot Create(AutomationEntity entity)
         {
+            // Make sure we always store the actions and state in the same order, it makes it easier to compare snapshots.
+            var actionSnapshots = entity.Actions.Values
+                .Select(ActionSnapshot.Create)
+                .OrderBy(s => s.name)
+                .ToList();
+
+            var stateSnapshots = entity.GetState()
+                .OrderBy(s => s.Key)
+                .ToList();
+
             return new(
                 entity.Id,
                 entity.Name,
                 entity.Description,
-                entity.Actions.Values.Select(ActionSnapshot.Create).ToList(),
-                entity.GetState().ToList());
+                actionSnapshots,
+                stateSnapshots);
         }
 
-        public void OnBeforeSerialize()
+        public bool Equals(EntitySnapshot other)
         {
-            throw new NotImplementedException();
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return id == other.id && name == other.name && description == other.description && actions.SequenceEqual(other.actions) && state.SequenceEqual(other.state);
         }
 
-        public void OnAfterDeserialize()
+        public override bool Equals(object obj)
         {
-            throw new NotImplementedException();
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((EntitySnapshot) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(id, name, description, actions, state);
         }
     }
 
@@ -159,7 +216,7 @@ namespace RegressionGames.Unity.Recording
     /// This snapshot is not coupled to the live game objects and can be stored safely between frames.
     /// </summary>
     [Serializable]
-    public class ActionSnapshot
+    public class ActionSnapshot: IEquatable<ActionSnapshot>
     {
         /// <summary>The name of the action.</summary>
         public string name;
@@ -191,6 +248,26 @@ namespace RegressionGames.Unity.Recording
         public static ActionSnapshot Create(AutomationAction action)
         {
             return new(action.Name, action.Description, action.ActivatedThisFrame);
+        }
+
+        public bool Equals(ActionSnapshot other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return name == other.name && description == other.description && activated == other.activated;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((ActionSnapshot) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(name, description, activated);
         }
     }
 }
