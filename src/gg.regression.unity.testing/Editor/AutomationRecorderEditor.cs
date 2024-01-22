@@ -13,6 +13,9 @@ namespace RegressionGames.Unity
             var myInspector = new VisualElement();
 
             myInspector.Add(new PropertyField(serializedObject.FindProperty("recordingDirectory"),"Recording Directory"));
+            myInspector.Add(new PropertyField(serializedObject.FindProperty("snapshotRate"),"Snapshot Rate"));
+            myInspector.Add(new PropertyField(serializedObject.FindProperty("saveSnapshotsOnlyWhenChanged"),
+                "Only Save Changes"));
             myInspector.Add(new Button(() =>
             {
                 var recorder = (AutomationRecorder) target;

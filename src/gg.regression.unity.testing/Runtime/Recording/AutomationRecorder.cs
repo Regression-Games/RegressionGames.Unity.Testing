@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using RegressionGames.Unity.Automation;
-using UnityEditor;
 using UnityEngine;
 
 namespace RegressionGames.Unity.Recording
