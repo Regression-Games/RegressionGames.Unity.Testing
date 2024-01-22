@@ -76,8 +76,7 @@ echo "Using Unity at $unity_path to build for $build_type"
 if unity "$unity_path" \
     -projectPath "$repo_root/src/UnityHostGame" \
     -batchmode -nographics -logFile - -quit \
-    -buildTarget StandaloneLinux64; then
-    #"${build_args[@]}"; then
+    "${build_args[@]}"; then
     echo "***************"
     echo "Build succeeded"
     echo "***************"
