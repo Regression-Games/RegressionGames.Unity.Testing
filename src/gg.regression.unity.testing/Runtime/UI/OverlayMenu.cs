@@ -95,6 +95,20 @@ namespace RegressionGames.Unity.UI
             overlayPanel.SetActive(false);
         }
 
+        public void OnStopAllBotsClick()
+        {
+            var automationController = GetAutomationController();
+            if (automationController == null)
+            {
+                return;
+            }
+
+            foreach (var bot in automationController.GetAllBots())
+            {
+                StopBot(bot);
+            }
+        }
+
         public void StopBot(Bot bot)
         {
             if (m_RecordingSessionsByBotInstance.TryGetValue(bot.InstanceId, out var session))

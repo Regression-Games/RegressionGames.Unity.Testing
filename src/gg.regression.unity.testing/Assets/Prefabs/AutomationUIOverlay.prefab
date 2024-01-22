@@ -1236,6 +1236,7 @@ MonoBehaviour:
   nextBotDropdown: {fileID: 6170958243685975978}
   availableBots:
   - {fileID: 2263835764165809147, guid: cc55d9a0603764feaab6ec07edba0e80, type: 3}
+  dontDestroyOnLoad: 1
 --- !u!1 &2351678533587064278
 GameObject:
   m_ObjectHideFlags: 0
@@ -1568,7 +1569,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6459355754687557092}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7698302943537031124}
+        m_TargetAssemblyTypeName: RegressionGames.Unity.UI.OverlayMenu, RegressionGames.Unity
+        m_MethodName: OnStopAllBotsClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3607023646969454214
 GameObject:
   m_ObjectHideFlags: 0
