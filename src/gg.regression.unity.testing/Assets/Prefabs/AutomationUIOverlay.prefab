@@ -1234,6 +1234,8 @@ MonoBehaviour:
   botListRoot: {fileID: 8935377145966792234}
   botListEntryPrefab: {fileID: 7521977320760550747, guid: 26ea560b8554d4c93a150b276b8ba6c8, type: 3}
   nextBotDropdown: {fileID: 6170958243685975978}
+  availableBots:
+  - {fileID: 2263835764165809147, guid: cc55d9a0603764feaab6ec07edba0e80, type: 3}
 --- !u!1 &2351678533587064278
 GameObject:
   m_ObjectHideFlags: 0
