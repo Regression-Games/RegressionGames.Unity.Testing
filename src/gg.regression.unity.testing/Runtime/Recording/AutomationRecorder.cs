@@ -47,8 +47,6 @@ namespace RegressionGames.Unity.Recording
 
         public RecordingSession StartRecordingSession(string name)
         {
-            BEEP BOOP SYNTAX ERROR
-
             // Generate a session ID for this recording.
             var sessionId = Guid.NewGuid();
             var sessionDirectory = Path.Combine(
