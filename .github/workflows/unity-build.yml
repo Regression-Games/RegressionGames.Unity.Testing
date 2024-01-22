@@ -23,14 +23,6 @@ jobs:
         run:
           echo "::add-matcher::$GITHUB_WORKSPACE/.github/problemMatchers/unity-compile.json"
 
-      - name: Retrieve Cached Library
-        uses: actions/cache@v3
-        with:
-          path: Library
-          key: Library-${{ hashFiles('src/UnityHostGame/Assets/**', 'src/UnityHostGame/Packages/**', 'src/UnityHostGame/ProjectSettings/**') }}
-          restore-keys: |
-            Library-
-
       - name: Build Unity Project
         id: build-unity-project
         uses: game-ci/unity-builder@v4
