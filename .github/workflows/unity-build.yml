@@ -31,6 +31,17 @@ jobs:
           restore-keys: |
             Library-
 
+      - name: Build Unity Project
+        id: build-unity-project
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          projectPath: src/UnityHostGame
+          targetPlatform: StandaloneLinux64
+
       - name: Run Unity Tests
         id: run-unity-tests
         uses: game-ci/unity-test-runner@v4
