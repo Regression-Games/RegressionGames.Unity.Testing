@@ -132,7 +132,7 @@ namespace RegressionGames.Unity.Recording
                 return true;
             }
 
-            return !m_LastSnapshot.entities.SequenceEqual(action.Snapshot.entities);
+            return action.Snapshot.HasChangesFrom(m_LastSnapshot);
         }
 
         internal class FrameRecordAction

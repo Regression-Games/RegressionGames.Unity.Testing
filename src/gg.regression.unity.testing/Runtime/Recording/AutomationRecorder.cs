@@ -117,6 +117,7 @@ namespace RegressionGames.Unity.Recording
             // Create a frame snapshot
             var snapshot = FrameSnapshot.Create(
                 FrameInfo.ForCurrentFrame(),
+                SceneInfo.ForActiveScene(),
                 AutomationController.Entities);
 
             // Take a screenshot if someone requested it.

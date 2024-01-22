@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using RegressionGames.Unity.Automation;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace RegressionGames.Unity.Recording
 {
@@ -11,10 +12,13 @@ namespace RegressionGames.Unity.Recording
     /// This snapshot is not coupled to the live game objects and can be stored safely between frames.
     /// </summary>
     [Serializable]
-    public class FrameSnapshot: IEquatable<FrameSnapshot>
+    public class FrameSnapshot
     {
         /// <summary>A <see cref="FrameInfo"/> containing basic information about the frame.</summary>
         public FrameInfo frame;
+
+        /// <summary>A <see cref="SceneInfo"/> containing information about the active scene.</summary>
+        public SceneInfo activeScene;
 
         /// <summary>A list of <see cref="EntitySnapshot"/> objects representing the state of each entity in the game.</summary>
         public List<EntitySnapshot> entities;
@@ -23,10 +27,12 @@ namespace RegressionGames.Unity.Recording
         /// A snapshot of the state of all entities in the game.
         /// </summary>
         /// <param name="frame">A <see cref="FrameInfo"/> representing the current frame.</param>
+        /// <param name="activeScene">A <see cref="SceneInfo"/> representing the active scene.</param>
         /// <param name="entities">A list of <see cref="EntitySnapshot"/> objects representing the state of each entity in the game.</param>
-        public FrameSnapshot(FrameInfo frame, List<EntitySnapshot> entities)
+        public FrameSnapshot(FrameInfo frame, SceneInfo activeScene, List<EntitySnapshot> entities)
         {
             this.frame = frame;
+            this.activeScene = activeScene;
             this.entities = entities;
         }
 
@@ -36,32 +42,48 @@ namespace RegressionGames.Unity.Recording
         /// <param name="frame">A <see cref="FrameInfo"/> representing the current frame.</param>
         /// <param name="entities">The <see cref="AutomationEntity"/> objects in the game.</param>
         /// <returns>A <see cref="FrameSnapshot"/> that can be stored safely between frames.</returns>
-        public static FrameSnapshot Create(FrameInfo frame, IEnumerable<AutomationEntity> entities)
+        public static FrameSnapshot Create(FrameInfo frame, SceneInfo activeScene, IEnumerable<AutomationEntity> entities)
         {
             // Make sure we always store the entities in the same order, it makes it easier to compare snapshots.
             var entitySnapshots = entities.Select(EntitySnapshot.Create).OrderBy(s => s.id).ToList();
-            return new(frame, entitySnapshots);
+            return new(frame, activeScene, entitySnapshots);
         }
 
-        public override bool Equals(object obj)
+        /// <summary>
+        /// Compares this snapshot to another snapshot and returns a boolean indicating if this snapshot has changed since the other snapshot.
+        /// This comparison ignores the <see cref="frame"/> field, because it is expected that the frame will always change.
+        /// </summary>
+        /// <param name="other">The <see cref="FrameSnapshot"/> to compare against. </param>
+        /// <returns>A boolean indicating if this snapshot has changes compared to the provided snapshot.</returns>
+        public bool HasChangesFrom(FrameSnapshot other)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((FrameSnapshot) obj);
+            return !Equals(activeScene, other.activeScene) ||
+                   !Enumerable.SequenceEqual(entities, other.entities);
         }
+    }
 
-        public bool Equals(FrameSnapshot other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return frame.Equals(other.frame) && entities.SequenceEqual(other.entities);
-        }
+    [Serializable]
+    public struct SceneInfo : IEquatable<SceneInfo>
+    {
+        /// <summary>
+        /// The name of the scene.
+        /// </summary>
+        public string name;
 
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(frame, entities);
-        }
+        /// <summary>
+        /// The path to the scene.
+        /// </summary>
+        public string path;
+
+        public bool Equals(SceneInfo other) => name == other.name && path == other.path;
+
+        public override bool Equals(object obj) => obj is SceneInfo other && Equals(other);
+
+        public override int GetHashCode() => HashCode.Combine(name, path);
+
+        public static SceneInfo ForActiveScene() => Create(SceneManager.GetActiveScene());
+
+        public static SceneInfo Create(Scene activeScene) => new(activeScene.name, activeScene.path);
     }
 
     [Serializable]
