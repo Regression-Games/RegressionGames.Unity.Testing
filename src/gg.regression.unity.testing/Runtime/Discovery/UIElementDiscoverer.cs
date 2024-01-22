@@ -38,11 +38,11 @@ namespace RegressionGames.Unity.Discovery
             {
             }
 
-            public override IEnumerable<KeyValuePair<string, object>> GetState()
+            public override IEnumerable<AutomationStateProperty> GetState()
             {
-                yield return new("alpha", Component.alpha);
-                yield return new("interactable", Component.interactable);
-                yield return new("blocksRaycasts", Component.blocksRaycasts);
+                yield return new("alpha", "The opacity of the element, from 0.0 (transparent) to 1.0 (fully opaque).", Component.alpha);
+                yield return new("interactable", "Indicates if the element is interactable.", Component.interactable);
+                yield return new("blocksRaycasts", "Indicates if the element blocks raycasts from the mouse pointer.", Component.blocksRaycasts);
             }
         }
 
@@ -59,6 +59,11 @@ namespace RegressionGames.Unity.Discovery
                     actions.Add(clickAction.Name, clickAction);
                 }
                 Actions = actions;
+            }
+
+            public override IEnumerable<AutomationStateProperty> GetState()
+            {
+                yield return new ("interactable", "Indicates if the element is interactable.", Component.IsInteractable());
             }
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using RegressionGames.Unity.Automation;
 using UnityEngine;
+using UnityEngine.Experimental.AI;
 using UnityEngine.SceneManagement;
 
 namespace RegressionGames.Unity.Recording
@@ -74,6 +75,12 @@ namespace RegressionGames.Unity.Recording
         /// The path to the scene.
         /// </summary>
         public string path;
+
+        private SceneInfo(string name, string path)
+        {
+            this.name = name;
+            this.path = path;
+        }
 
         public bool Equals(SceneInfo other) => name == other.name && path == other.path;
 
@@ -156,6 +163,9 @@ namespace RegressionGames.Unity.Recording
         /// <summary>The name of the entity.</summary>
         public string name;
 
+        /// <summary>The type of the entity.</summary>
+        public string type;
+
         /// <summary>A description of the entity.</summary>
         public string description;
 
@@ -163,7 +173,7 @@ namespace RegressionGames.Unity.Recording
         public List<ActionSnapshot> actions;
 
         /// <summary>The raw state values for this entity.</summary>
-        public List<KeyValuePair<string, object>> state;
+        public List<KeyValuePair<string, StateSnapshot>> state;
 
         /// <summary>
         /// A snapshot of the state of a single entity in the game.
@@ -175,12 +185,14 @@ namespace RegressionGames.Unity.Recording
         /// <param name="state">The raw state values for this entity.</param>
         public EntitySnapshot(int id,
             string name,
+            string type,
             string description,
             List<ActionSnapshot> actions,
-            List<KeyValuePair<string, object>> state)
+            List<KeyValuePair<string, StateSnapshot>> state)
         {
             this.id = id;
             this.name = name;
+            this.type = type;
             this.description = description;
             this.actions = actions;
             this.state = state;
@@ -200,12 +212,14 @@ namespace RegressionGames.Unity.Recording
                 .ToList();
 
             var stateSnapshots = entity.GetState()
-                .OrderBy(s => s.Key)
+                .OrderBy(s => s.name)
+                .Select(s => new KeyValuePair<string, StateSnapshot>(s.name, new(s.value, s.description)))
                 .ToList();
 
             return new(
                 entity.Id,
                 entity.Name,
+                entity.Type,
                 entity.Description,
                 actionSnapshots,
                 stateSnapshots);
@@ -229,6 +243,26 @@ namespace RegressionGames.Unity.Recording
         public override int GetHashCode()
         {
             return HashCode.Combine(id, name, description, actions, state);
+        }
+    }
+
+    [Serializable]
+    public struct StateSnapshot
+    {
+        /// <summary>
+        /// The value of the state property.
+        /// </summary>
+        public object value;
+
+        /// <summary>
+        /// A description of the state property.
+        /// </summary>
+        public string description;
+
+        public StateSnapshot(object value, string description)
+        {
+            this.value = value;
+            this.description = description;
         }
     }
 

@@ -18,8 +18,6 @@ namespace RegressionGames.Unity.Automation
     /// </summary>
     public abstract class AutomationEntity
     {
-        internal AutomationController AutomationController;
-
         /// <summary>
         /// The unique ID of this entity.
         /// </summary>
@@ -29,6 +27,12 @@ namespace RegressionGames.Unity.Automation
         /// Gets the user-visible display name of this entity.
         /// </summary>
         public string Name { get; }
+
+        /// <summary>
+        /// A user-visible type name for the entity, to allow for easier identification.
+        /// By default, this is the .NET type name of the entity.
+        /// </summary>
+        public virtual string Type => GetType().FullName;
 
         /// <summary>
         /// Gets a description of what the entity represents.
@@ -54,12 +58,7 @@ namespace RegressionGames.Unity.Automation
         // TODO: This API has similar problems to the existing RGState APIs (multiple dictionaries, lots of allocations, etc.)
         // Once the refactor of the RGState mechanism lands in the main SDK we can use that to inform how this can evolve.
         // This is an IEnumerable instead of an IReadOnlyDictionary because it's much more efficient when all you're doing is dumping the state to a file.
-        public virtual IEnumerable<KeyValuePair<string, object>> GetState() => Enumerable.Empty<KeyValuePair<string, object>>();
-
-        internal void SetAutomationController(AutomationController controller)
-        {
-            AutomationController = controller;
-        }
+        public virtual IEnumerable<AutomationStateProperty> GetState() => Enumerable.Empty<AutomationStateProperty>();
     }
 
     public abstract class AutomationEntity<T> : AutomationEntity, IAutomationEntityWithComponent where T : Component
@@ -67,6 +66,12 @@ namespace RegressionGames.Unity.Automation
         private readonly T m_Component;
 
         public T Component => m_Component;
+
+        /// <summary>
+        /// A user-visible type name for the entity, to allow for easier identification.
+        /// By default, this is the .NET type name of the component.
+        /// </summary>
+        public override string Type => typeof(T).FullName;
 
         Component IAutomationEntityWithComponent.Component => m_Component;
 
@@ -134,6 +139,31 @@ namespace RegressionGames.Unity.Automation
         /// Activates this action.
         /// </summary>
         protected abstract void Execute();
+    }
+
+    public struct AutomationStateProperty
+    {
+        /// <summary>
+        /// The name of the state property.
+        /// </summary>
+        public string name;
+
+        /// <summary>
+        /// A description of what the state property represents.
+        /// </summary>
+        public string description;
+
+        /// <summary>
+        /// The value of the state property.
+        /// </summary>
+        public object value;
+
+        public AutomationStateProperty(string name, string description, object value)
+        {
+            this.name = name;
+            this.description = description;
+            this.value = value;
+        }
     }
 
     // TODO: Capture arguments here.

@@ -45,8 +45,6 @@ namespace RegressionGames.Unity.Automation
 
         public void RegisterEntity(AutomationEntity entity)
         {
-            // We need to wrap the entity in a proxy that allows us to monitor what's going on with it.
-            entity.SetAutomationController(this);
             m_Entities.Add(entity);
         }
 
