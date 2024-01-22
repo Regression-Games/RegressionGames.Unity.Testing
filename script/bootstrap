@@ -41,3 +41,7 @@ if [ ! -d "$unity_path" ]; then
 fi
 
 echo "Found Unity $unity_version at $unity_path"
+
+# Install pre-commit hooks
+echo "Installing pre-commit hooks"
+ln -sf "$repo_root/script/pre-commit" "$repo_root/.git/hooks/pre-commit"

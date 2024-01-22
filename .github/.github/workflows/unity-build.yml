@@ -1,0 +1,51 @@
+name: Unity Build and Test
+
+on:
+  # Build every commit to 'main'
+  push:
+    branches:
+      - main
+
+  # Build every PR
+  pull_request:
+
+jobs:
+  test:
+    name: Unity Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Activate Problem Matchers
+        run:
+          echo "::add-matcher::$GITHUB_WORKSPACE/.github/problemMatchers/unity-compile.json"
+
+      - name: Retrieve Cached Library
+        uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-${{ hashFiles('src/UnityHostGame/Assets/**', 'src/UnityHostGame/Packages/**', 'src/UnityHostGame/ProjectSettings/**') }}
+          restore-keys: |
+            Library-
+
+      - name: Run Unity Tests
+        id: run-unity-tests
+        uses: game-ci/unity-test-runner@v4
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          projectPath: src/UnityHostGame
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: Test results
+          path: ${{ steps.run-unity-tests.outputs.artifactsPath }}
+              

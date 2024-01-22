@@ -3,7 +3,7 @@
 #/ Builds the Unity project.
 #/
 #/ Options:
-#/   -u, --unity-path <path>    Path to the Unity installation to use. Defaults to an autodetected path based on the version of RGUnityBots.
+#/   -u, --unity-path <path>    Path to the Unity installation to use. Defaults to an autodetected path based on the version of UnityHostGame.
 #/   --skip-edit-mode           Skip running the Edit mode tests.
 #/   --skip-play-mode           Skip running the Play mode tests.
 #/   --category <category>      Run only tests in the given category. Defaults to all categories.
@@ -59,7 +59,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [ -z "$unity_path" ]; then
-    unity_path=$(get_unity_path "$(get_unity_version "$repo_root/src/RGUnityBots")")
+    unity_path=$(get_unity_path "$(get_unity_version "$repo_root/src/UnityHostGame")")
 fi
 
 if [ ! -d "$(basename $test_output)" ]; then
@@ -79,7 +79,7 @@ edit_mode_out="${test_output/.xml/.editmode.xml}"
 if $play_mode; then
     echo "Using Unity at $unity_path to run Play Mode tests..."
     if ! unity "$unity_path" \
-        -projectPath "$repo_root/src/RGUnityBots" \
+        -projectPath "$repo_root/src/UnityHostGame" \
         -testPlatform PlayMode \
         -runTests \
         $category \
@@ -93,7 +93,7 @@ fi
 if $edit_mode; then
     echo "Using Unity at $unity_path to run Edit Mode tests..."
     if ! unity "$unity_path" \
-        -projectPath "$repo_root/src/RGUnityBots" \
+        -projectPath "$repo_root/src/UnityHostGame" \
         -testPlatform EditMode \
         -runTests \
         $category \

@@ -3,7 +3,7 @@
 #/ Synchronizes Visual Studio/Rider solution and project files with the Unity project.
 #/
 #/ Options:
-#/   -u, --unity-path <path>    Path to the Unity installation to use. Defaults to an autodetected path based on the version of RGUnityBots.
+#/   -u, --unity-path <path>    Path to the Unity installation to use. Defaults to an autodetected path based on the version of UnityHostGame.
 source_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 repo_root="$(dirname "$source_dir")"
 source "$repo_root/script/_utils.sh"
@@ -36,9 +36,9 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [ -z "$unity_path" ]; then
-    unity_path=$(get_unity_path "$(get_unity_version "$repo_root/src/RGUnityBots")")
+    unity_path=$(get_unity_path "$(get_unity_version "$repo_root/src/UnityHostGame")")
 fi
 
 echo "Using Unity at $unity_path"
 echo "Syncing Visual Studio/Rider solution and project files..."
-unity "$unity_path" -projectPath "$repo_root/src/RGUnityBots" -executeMethod "UnityEditor.SyncVS.SyncSolution"
+unity "$unity_path" -projectPath "$repo_root/src/UnityHostGame" -executeMethod "UnityEditor.SyncVS.SyncSolution"
