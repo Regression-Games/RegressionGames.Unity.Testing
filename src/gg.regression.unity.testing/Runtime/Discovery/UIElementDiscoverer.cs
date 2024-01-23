@@ -38,11 +38,11 @@ namespace RegressionGames.Unity.Discovery
             {
             }
 
-            public override IEnumerable<KeyValuePair<string, object>> GetState()
+            public override IEnumerable<AutomationStateProperty> GetState()
             {
-                yield return new("alpha", Component.alpha);
-                yield return new("interactable", Component.interactable);
-                yield return new("blocksRaycasts", Component.blocksRaycasts);
+                yield return new("alpha", "The opacity of the element, from 0.0 (transparent) to 1.0 (fully opaque).", Component.alpha);
+                yield return new("interactable", "Indicates if the element is interactable.", Component.interactable);
+                yield return new("blocksRaycasts", "Indicates if the element blocks raycasts from the mouse pointer.", Component.blocksRaycasts);
             }
         }
 
@@ -60,6 +60,11 @@ namespace RegressionGames.Unity.Discovery
                 }
                 Actions = actions;
             }
+
+            public override IEnumerable<AutomationStateProperty> GetState()
+            {
+                yield return new ("interactable", "Indicates if the element is interactable.", Component.IsInteractable());
+            }
         }
 
         class UIClickAction : AutomationAction
@@ -71,6 +76,13 @@ namespace RegressionGames.Unity.Discovery
             {
                 m_Selectable = selectable;
                 m_Log = Logger.For(typeof(UIClickAction).FullName);
+
+                if (selectable is Button b)
+                {
+                    // This may double-mark the button as activated, but that's fine.
+                    // By doing this, we capture clicks that weren't caused by the bot.
+                    b.onClick.AddListener(MarkActivated);
+                }
             }
 
             public override bool CanActivateThisFrame() => m_Selectable.IsInteractable();

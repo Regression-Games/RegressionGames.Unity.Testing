@@ -38,12 +38,18 @@ namespace RegressionGames.Unity.Recording
         /// </summary>
         public string startTime;
 
-        public static RecordingInfo Create(string id, string name)
+        /// <summary>
+        /// The title of the recording session.
+        /// </summary>
+        public string title;
+
+        public static RecordingInfo Create(string id, string name, string title)
         {
             return new()
             {
                 id = id,
                 name = name,
+                title = title,
                 version = 1,
                 machineName = Environment.MachineName,
                 userName = Environment.UserName,

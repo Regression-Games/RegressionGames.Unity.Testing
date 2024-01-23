@@ -16,15 +16,23 @@ namespace RegressionGames.Unity.Automation
         // For now though, we'll implement those finders by iterating the list, until we have a need to optimize.
         private readonly List<AutomationEntity> m_Entities = new();
 
-        [Tooltip("Bots that can be spawned in the scene by this controller.")]
-        public Bot[] availableBots;
-
         [HideInInspector]
         public AutomationRecorder automationRecorder;
+
+        [Tooltip("If true, the controller will automatically set 'DontDestroyOnLoad' on itself when spawned.")]
+        public bool dontDestroyOnLoad = true;
 
         public IReadOnlyList<AutomationEntity> Entities => m_Entities;
 
         public Bot[] GetAllBots() => GetComponentsInChildren<Bot>(includeInactive: true);
+
+        private void Awake()
+        {
+            if (dontDestroyOnLoad)
+            {
+                DontDestroyOnLoad(this.gameObject);
+            }
+        }
 
         public Bot Spawn(Bot bot)
         {
@@ -37,8 +45,6 @@ namespace RegressionGames.Unity.Automation
 
         public void RegisterEntity(AutomationEntity entity)
         {
-            // We need to wrap the entity in a proxy that allows us to monitor what's going on with it.
-            entity.SetAutomationController(this);
             m_Entities.Add(entity);
         }
 

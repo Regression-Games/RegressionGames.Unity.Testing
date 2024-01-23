@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using RegressionGames.Unity.Recording;
 
 namespace RegressionGames.Unity
 {
@@ -16,7 +17,7 @@ namespace RegressionGames.Unity
                 Formatting = Formatting.Indented,
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
             };
-            settings.Converters.Add(new ListOfKeyValuePairsConverter());
+            settings.Converters.Add(new ListOfKeyValuePairsConverter<StateSnapshot>());
             return settings;
         }
 
@@ -31,11 +32,14 @@ namespace RegressionGames.Unity
         }
     }
 
-    class ListOfKeyValuePairsConverter : JsonConverter
+    /// <summary>
+    /// Serializes a <see cref="List{KeyValuePair{string, TValue}}"/> as a JSON object.
+    /// </summary>
+    class ListOfKeyValuePairsConverter<TValue> : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            var list = (List<KeyValuePair<string, object>>) value;
+            var list = (List<KeyValuePair<string, TValue>>) value;
             writer.WriteStartObject();
             foreach (var (key, val) in list)
             {
@@ -52,7 +56,7 @@ namespace RegressionGames.Unity
             throw new NotImplementedException();
         }
 
-        public override bool CanConvert(Type objectType) => objectType == typeof(List<KeyValuePair<string, object>>);
+        public override bool CanConvert(Type objectType) => objectType == typeof(List<KeyValuePair<string, TValue>>);
 
         public override bool CanRead => false;
     }

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using RegressionGames.Unity.Automation;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace RegressionGames.Unity.Discovery
 {
@@ -13,6 +14,23 @@ namespace RegressionGames.Unity.Discovery
         {
             base.Awake();
 
+            // Detect scene changes and re-discover entities.
+            SceneManager.activeSceneChanged += (_, _) => RediscoverEntities();
+
+            // Discover entities in the current scene.
+            RediscoverEntities();
+        }
+
+        protected virtual void RediscoverEntities()
+        {
+            // Unregister existing entities
+            foreach (var entity in m_Entities)
+            {
+                AutomationController.UnregisterEntity(entity);
+            }
+            m_Entities.Clear();
+
+            // Discover new entities
             foreach (var entity in DiscoverEntities())
             {
                 RegisterEntity(entity);

@@ -1,17 +1,14 @@
 using System;
 using System.Collections.Concurrent;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using UnityEngine;
 
 namespace RegressionGames.Unity.Recording
 {
     internal class RecorderWorker
     {
-        private readonly string m_SessionId;
+        private readonly RecordingInfo m_Info;
         private readonly string m_SessionName;
         private readonly string m_SessionDirectory;
         private readonly bool m_SaveOnlyOnChanged;
@@ -23,10 +20,9 @@ namespace RegressionGames.Unity.Recording
 
         public bool IsRunning => !m_StopRequested.IsCancellationRequested;
 
-        public RecorderWorker(string sessionId, string sessionName, string sessionDirectory, bool saveOnlyOnChanged)
+        public RecorderWorker(RecordingInfo info, string sessionDirectory, bool saveOnlyOnChanged)
         {
-            m_SessionId = sessionId;
-            m_SessionName = sessionName;
+            m_Info = info;
             m_SessionDirectory = sessionDirectory;
             m_SaveOnlyOnChanged = saveOnlyOnChanged;
 
@@ -43,7 +39,7 @@ namespace RegressionGames.Unity.Recording
                 }
             })
             {
-                Name = GetType().FullName
+                Name = $"{GetType().FullName} - Session {info.id}",
             };
             m_StopRequested = new CancellationTokenSource();
         }
@@ -79,8 +75,7 @@ namespace RegressionGames.Unity.Recording
             }
 
             // Record the recording metadata file
-            var info = RecordingInfo.Create(m_SessionId, m_SessionName);
-            var infoJson = RegressionGamesJsonFormat.Serialize(info);
+            var infoJson = RegressionGamesJsonFormat.Serialize(m_Info);
             var infoPath = Path.Combine(m_SessionDirectory, "recording.json");
             File.WriteAllText(infoPath, infoJson);
 
@@ -132,7 +127,7 @@ namespace RegressionGames.Unity.Recording
                 return true;
             }
 
-            return !m_LastSnapshot.entities.SequenceEqual(action.Snapshot.entities);
+            return action.Snapshot.HasChangesFrom(m_LastSnapshot);
         }
 
         internal class FrameRecordAction

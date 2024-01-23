@@ -6,6 +6,7 @@ using RegressionGames.Unity.Recording;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace RegressionGames.Unity.UI
 {
@@ -17,15 +18,40 @@ namespace RegressionGames.Unity.UI
         private readonly Dictionary<Guid, BotListEntry> m_BotListEntries = new();
         private readonly Dictionary<Guid, RecordingSession> m_RecordingSessionsByBotInstance = new();
         private readonly Logger<OverlayMenu> m_Log;
+        private RecordingSession m_ManualRecordingSession;
 
+        [HideInInspector]
         public GameObject overlayPanel;
+        [HideInInspector]
         public GameObject botListRoot;
+        [HideInInspector]
         public GameObject botListEntryPrefab;
+        [HideInInspector]
         public TMP_Dropdown nextBotDropdown;
+        [HideInInspector]
+        public Button recordButton;
+        [HideInInspector]
+        public Button stopRecordingButton;
+        [HideInInspector]
+        public TMP_Text activeRecordingText;
+
+        [Tooltip("Bots that can be spawned in the scene from this UI.")]
+        public Bot[] availableBots;
+
+        [Tooltip("If true, the UI overlay will automatically set 'DontDestroyOnLoad' on itself when spawned.")]
+        public bool dontDestroyOnLoad = true;
 
         public OverlayMenu()
         {
             m_Log = Logger.For(this);
+        }
+
+        private void Awake()
+        {
+            if (dontDestroyOnLoad)
+            {
+                DontDestroyOnLoad(this.gameObject);
+            }
         }
 
         private void Start()
@@ -45,6 +71,29 @@ namespace RegressionGames.Unity.UI
             overlayPanel.SetActive(false);
         }
 
+        public void OnStartRecordingClick()
+        {
+            if(m_ManualRecordingSession != null)
+            {
+                return;
+            }
+
+            var automationRecorder = FindObjectOfType<AutomationRecorder>();
+            m_ManualRecordingSession = automationRecorder.StartRecordingSession("manual", "Manual Session");
+            overlayPanel.SetActive(false);
+        }
+
+        public void OnStopRecordingClick()
+        {
+            if(m_ManualRecordingSession == null)
+            {
+                return;
+            }
+
+            m_ManualRecordingSession.Stop();
+            m_ManualRecordingSession = null;
+        }
+
         public void OnStartBotClick()
         {
             var automationController = GetAutomationController();
@@ -53,7 +102,7 @@ namespace RegressionGames.Unity.UI
                 return;
             }
 
-            var bot = automationController.availableBots[nextBotDropdown.value];
+            var bot = availableBots[nextBotDropdown.value];
             if (bot == null)
             {
                 return;
@@ -69,12 +118,26 @@ namespace RegressionGames.Unity.UI
             if (automationRecorder != null && !m_RecordingSessionsByBotInstance.ContainsKey(botInstance.InstanceId))
             {
                 var date = DateTimeOffset.Now.ToString("s");
-                var session = automationRecorder.StartRecordingSession($"Auto-Recording for Bot {botInstance.InstanceId} at {date}");
+                var session = automationRecorder.StartRecordingSession(bot.name, $"Auto-Recording for Bot {botInstance.InstanceId} at {date}");
                 m_RecordingSessionsByBotInstance.Add(botInstance.InstanceId, session);
             }
 
             // Hide the overlay, since we assume the bot should now be running and we don't want the overlay in the way.
             overlayPanel.SetActive(false);
+        }
+
+        public void OnStopAllBotsClick()
+        {
+            var automationController = GetAutomationController();
+            if (automationController == null)
+            {
+                return;
+            }
+
+            foreach (var bot in automationController.GetAllBots())
+            {
+                StopBot(bot);
+            }
         }
 
         public void StopBot(Bot bot)
@@ -133,11 +196,11 @@ namespace RegressionGames.Unity.UI
             }
 
             // Build a list of available bots
-            var availableBots = automationController.availableBots
+            var availableBotOptions = availableBots
                 .Select(b => new TMP_Dropdown.OptionData(b.name))
                 .OrderBy(s => s)
                 .ToList();
-            nextBotDropdown.options = availableBots;
+            nextBotDropdown.options = availableBotOptions;
 
             // Update the list of active bots
             var bots = automationController.GetAllBots();
@@ -177,6 +240,20 @@ namespace RegressionGames.Unity.UI
                 var rt = entries[i].GetComponent<RectTransform>();
                 var position = new Vector3(0f, rt.rect.height * -i, 0f);
                 entries[i].transform.localPosition = position;
+            }
+
+            if (m_ManualRecordingSession != null)
+            {
+                stopRecordingButton.gameObject.SetActive(true);
+                recordButton.gameObject.SetActive(false);
+                activeRecordingText.gameObject.SetActive(true);
+                activeRecordingText.text = $"Recording: {m_ManualRecordingSession.Name}.{m_ManualRecordingSession.Id:N}";
+            }
+            else
+            {
+                stopRecordingButton.gameObject.SetActive(false);
+                recordButton.gameObject.SetActive(true);
+                activeRecordingText.gameObject.SetActive(false);
             }
         }
 
