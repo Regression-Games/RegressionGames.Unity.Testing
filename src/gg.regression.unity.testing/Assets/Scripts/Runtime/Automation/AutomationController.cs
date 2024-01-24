@@ -16,7 +16,6 @@ namespace RegressionGames.Unity.Automation
         // For now though, we'll implement those finders by iterating the list, until we have a need to optimize.
         private readonly List<AutomationEntity> m_Entities = new();
 
-        [HideInInspector]
         public AutomationRecorder automationRecorder;
 
         [Tooltip("If true, the controller will automatically set 'DontDestroyOnLoad' on itself when spawned.")]
