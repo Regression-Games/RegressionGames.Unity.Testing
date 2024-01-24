@@ -47,6 +47,8 @@ namespace RegressionGames.Unity.Recording
 
         public RecordingSession StartRecordingSession(string name, string title)
         {
+            BEEP BOOP SYNTAX ERROR
+
             // Make the name file-safe
             name = string.Join("_", name.Split(Path.GetInvalidFileNameChars()));
 
