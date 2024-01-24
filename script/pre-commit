@@ -1,0 +1,21 @@
+#!/bin/bash
+#/ Usage: scripts/precommit
+#/ Runs pre-commit checks and auto-reformatting
+
+# Get the path to our script and resolve symlinks
+script_file="${BASH_SOURCE[0]}"
+while [ -L "$script_file" ]; do
+    script_file="$(readlink "$script_file")"
+done
+
+source_dir="$( cd "$( dirname $script_file )" >/dev/null 2>&1 && pwd )"
+repo_root="$(dirname "$source_dir")"
+source "$repo_root/script/_utils.sh"
+
+set -euo pipefail
+
+# The fmt script will handle checking for the solution files.
+script/fmt
+
+# Commit any changes made by the fmt script, but only changes to files that already exist in the index.
+git add -u

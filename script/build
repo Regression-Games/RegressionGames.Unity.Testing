@@ -3,7 +3,7 @@
 #/ Builds the Unity project.
 #/
 #/ Options:
-#/   -u, --unity-path <path>    Path to the Unity installation to use. Defaults to an autodetected path based on the version of RGUnityBots.
+#/   -u, --unity-path <path>    Path to the Unity installation to use. Defaults to an autodetected path based on the version of UnityHostGame.
 #/   -b, --build-type <type>    Type of build to perform. Defaults to the current platform.
 #/      -b "Linux"              Builds a Linux standalone player.
 #/      -b "macOS"              Builds a macOS standalone player.
@@ -45,7 +45,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [ -z "$unity_path" ]; then
-    unity_path=$(get_unity_path "$(get_unity_version "$repo_root/src/RGUnityBots")")
+    unity_path=$(get_unity_path "$(get_unity_version "$repo_root/src/UnityHostGame")")
 fi
 
 if [ -z "$build_type" ]; then
@@ -74,7 +74,7 @@ esac
 
 echo "Using Unity at $unity_path to build for $build_type"
 if unity "$unity_path" \
-    -projectPath "$repo_root/src/RGUnityBots" \
+    -projectPath "$repo_root/src/UnityHostGame" \
     -batchmode -nographics -logFile - -quit \
     "${build_args[@]}"; then
     echo "***************"
