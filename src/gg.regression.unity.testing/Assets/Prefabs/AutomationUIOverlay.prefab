@@ -1239,7 +1239,8 @@ MonoBehaviour:
   recordButton: {fileID: 590096121768360137}
   stopRecordingButton: {fileID: 7850780395078983416}
   activeRecordingText: {fileID: 4162554419346896232}
-  availableBots: []
+  availableBots:
+  - {fileID: 2263835764165809147, guid: cc55d9a0603764feaab6ec07edba0e80, type: 3}
   dontDestroyOnLoad: 1
 --- !u!1 &2351678533587064278
 GameObject:
