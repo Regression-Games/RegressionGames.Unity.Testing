@@ -655,6 +655,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1791510578999917186, guid: 51000bb6e98f8490da0c727627912430, type: 3}
+      propertyPath: availableBots.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 922587998651755810, guid: 31f59ce7ace824cefa5b0898b02bde9e, type: 3}
       propertyPath: m_Pivot.y
       value: 0
@@ -741,16 +745,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7698302943537031124, guid: 31f59ce7ace824cefa5b0898b02bde9e, type: 3}
       propertyPath: availableBots.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7698302943537031124, guid: 31f59ce7ace824cefa5b0898b02bde9e, type: 3}
       propertyPath: availableBots.Array.data[0]
       value: 
       objectReference: {fileID: 2263835764165809147, guid: cc55d9a0603764feaab6ec07edba0e80, type: 3}
-    - target: {fileID: 1791510578999917186, guid: 51000bb6e98f8490da0c727627912430, type: 3}
-      propertyPath: availableBots.Array.size
-      value: 1
-      objectReference: {fileID: 0}
+    - target: {fileID: 7698302943537031124, guid: 31f59ce7ace824cefa5b0898b02bde9e, type: 3}
+      propertyPath: availableBots.Array.data[1]
+      value: 
+      objectReference: {fileID: -6397475202044885760, guid: f0588f136628843cfb91a9e5c9790598, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 31f59ce7ace824cefa5b0898b02bde9e, type: 3}
 --- !u!1001 &1838009163

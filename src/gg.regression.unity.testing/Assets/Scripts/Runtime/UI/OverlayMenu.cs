@@ -197,8 +197,8 @@ namespace RegressionGames.Unity.UI
 
             // Build a list of available bots
             var availableBotOptions = availableBots
+                .OrderBy(s => s.name)
                 .Select(b => new TMP_Dropdown.OptionData(b.name))
-                .OrderBy(s => s)
                 .ToList();
             nextBotDropdown.options = availableBotOptions;
 

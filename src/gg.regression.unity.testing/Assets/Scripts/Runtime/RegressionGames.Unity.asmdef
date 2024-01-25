@@ -2,6 +2,7 @@
   "name": "RegressionGames.Unity",
   "rootNamespace": "RegressionGames.Unity",
   "references": [
-    "Unity.TextMeshPro"
+    "Unity.TextMeshPro",
+    "Azure.AI.OpenAI"
   ]
 }

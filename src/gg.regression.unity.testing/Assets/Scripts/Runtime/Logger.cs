@@ -45,7 +45,7 @@ namespace RegressionGames.Unity
         public void Verbose(string message) => Debug.Log(FormatMessage(message));
         public void Verbose(string message, Object context) => Debug.Log(FormatMessage(message), context);
 
-        string FormatMessage(string message) => $"[{m_Category}] {message}";
+        string FormatMessage(string message) => $"[{Time.frameCount}] [{m_Category}] {message}";
     }
 
     internal readonly struct Logger<T>: ILogger where T : Object
@@ -73,6 +73,6 @@ namespace RegressionGames.Unity
         public void Verbose(string message) => Debug.Log(FormatMessage(message), m_Instance);
         public void Verbose(string message, Object context) => Debug.Log(FormatMessage(message), context);
 
-        string FormatMessage(string message) => $"[{m_Category}] {message}";
+        string FormatMessage(string message) => $"[{Time.frameCount}] [{m_Category}] {message}";
     }
 }

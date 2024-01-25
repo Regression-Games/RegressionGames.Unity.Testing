@@ -21,9 +21,9 @@ namespace RegressionGames.Unity
             return settings;
         }
 
-        public static string Serialize(object obj)
+        public static string Serialize(object obj, Formatting formatting = Formatting.Indented)
         {
-            return JsonConvert.SerializeObject(obj, SerializerSettings);
+            return JsonConvert.SerializeObject(obj, formatting, SerializerSettings);
         }
 
         public static T Deserialize<T>(string json)
