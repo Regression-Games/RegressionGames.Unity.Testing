@@ -119,7 +119,12 @@ namespace RegressionGames.Unity.Recording
             }
 
             // Build the frame snapshot
-            var snapshot = BuildFrameSnapshot();
+            var snapshot = BuildFrameSnapshot(out var actionActivatedThisFrame);
+            if (actionActivatedThisFrame)
+            {
+                // If any action was activated this frame, we want to take a screenshot next frame.
+                RequestScreenshot(1);
+            }
 
             // Take a screenshot if someone requested it.
             var screenshotBytes = TakeScreenshotIfRequested();
@@ -131,19 +136,24 @@ namespace RegressionGames.Unity.Recording
             }
         }
 
-        private FrameSnapshot BuildFrameSnapshot()
+        public FrameSnapshot CreateFrameSnapshot()
+        {
+            return BuildFrameSnapshot(out _);
+        }
+
+        private FrameSnapshot BuildFrameSnapshot(out bool actionActivatedThisFrame)
         {
             // Builds a frame snapshot, and also takes actions based on things that happened in this snapshot.
             // For example, as we build the snapshot we track if any actions were activated and if they were, we request a screenshot next frame.
 
             var entities = new List<EntitySnapshot>();
-            var anyActionActivatedThisFrame = false;
+            actionActivatedThisFrame = false;
             foreach(var entity in AutomationController.Entities)
             {
                 var actions = new List<ActionSnapshot>();
-                foreach (var (name, action) in entity.Actions.OrderBy(p => p.Key))
+                foreach (var (_, action) in entity.Actions.OrderBy(p => p.Key))
                 {
-                    anyActionActivatedThisFrame |= action.ActivatedThisFrame;
+                    actionActivatedThisFrame |= action.ActivatedThisFrame;
                     actions.Add(ActionSnapshot.Create(action));
                 }
 
@@ -153,12 +163,6 @@ namespace RegressionGames.Unity.Recording
                     .ToList();
 
                 entities.Add(new(entity.Id, entity.Name, entity.Type, entity.Description, actions, states));
-            }
-
-            if (anyActionActivatedThisFrame)
-            {
-                // If any action was activated this frame, we want to take a screenshot next frame.
-                RequestScreenshot(1);
             }
 
             return new FrameSnapshot(
@@ -171,18 +175,23 @@ namespace RegressionGames.Unity.Recording
         {
             if (m_ScreenshotRequests.Remove(Time.frameCount))
             {
-                var texture = ScreenCapture.CaptureScreenshotAsTexture();
-                try
-                {
-                    return texture.EncodeToPNG();
-                }
-                finally
-                {
-                    Destroy(texture);
-                }
+                return TakeScreenshot();
             }
 
             return null;
+        }
+
+        public byte[] TakeScreenshot()
+        {
+            var texture = ScreenCapture.CaptureScreenshotAsTexture();
+            try
+            {
+                return texture.EncodeToPNG();
+            }
+            finally
+            {
+                Destroy(texture);
+            }
         }
 
         internal void StopSession(RecordingSession session)

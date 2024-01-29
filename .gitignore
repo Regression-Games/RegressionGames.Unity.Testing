@@ -1,6 +1,10 @@
 UnityPath.props
 src/gg.regression.unity/Assets/Plugins/*.dll
 
+# Don't commit OpenAI Credentials!
+RegressionGamesOpenAICredentials.asset
+RegressionGamesOpenAICredentials.asset.meta
+
 ### Default DotNet.gitignore follows ###
 
 ## Ignore Visual Studio temporary files, build results, and

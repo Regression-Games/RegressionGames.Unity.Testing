@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <!-- This is a fake project used only to restore packages. -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PluginsDirectory>$(MSBuildThisFileDirectory)..\Assets\Plugins\</PluginsDirectory>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.AI.OpenAI" Version="1.0.0-beta.12" />
+  </ItemGroup>
+
+  <Target Name="CopyPackages" AfterTargets="Publish">
+    <!-- Copy the closure of all referenced package assemblies to the ../Assets/Plugins directory -->
+    <RemoveDir Directories="$(PluginsDirectory)" />
+    <ItemGroup>
+      <PackageFiles Include="$(PublishDir)*.dll" />
+      <PackageFiles Remove="$(PublishDir)$(AssemblyName).dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(PackageFiles)" DestinationFolder="$(PluginsDirectory)" />
+  </Target>
+
+</Project>

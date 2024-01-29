@@ -1,0 +1,32 @@
+#!/bin/bash
+#/ Usage: scripts/update-nuget-packages
+#/ Installs any nuget packages specified in ./src/gg.regression.unity.testing/NuGet~/NuGet.csproj into the Assets/Plugins folder.
+source_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+repo_root="$(dirname "$source_dir")"
+source "$repo_root/script/_utils.sh"
+
+set -euo pipefail
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    key="$1"
+    shift
+    case "$key" in
+        --help)
+            grep '^#/' "$0" | cut -c4-
+            exit 0
+            ;;
+        -*)
+            echo "Unknown option: $key"
+            exit 1
+            ;;
+        *)
+            echo "Unknown argument: $key"
+            exit 1
+            ;;
+    esac
+done
+
+temp_dir=$(mktemp -d)
+trap "rm -rf $temp_dir" EXIT
+dotnet publish "$repo_root/src/gg.regression.unity.testing/NuGet~/NuGet.csproj" -c Release -o "$temp_dir"

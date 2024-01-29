@@ -1,0 +1,2 @@
+# Allow csproj files here, since we use them for updating NuGet packages.
+!*.csproj
