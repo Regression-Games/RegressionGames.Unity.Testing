@@ -1,4 +1,4 @@
-# Regression Games Automated Testing SDK (Preview)
+# Regression Games Automated UI Testing SDK (Preview)
 
 A Unity SDK to help you create automated tests for you game with minimal code.
 
@@ -15,7 +15,7 @@ https://github.com/Regression-Games/RegressionGames.Unity.Testing.git?path=src/g
 
 ## Documentation
 
-For full documentation, see LINK TBD.
+For full documentation, see [our Documentation site](https://docs.regression.gg/automated-testing/getting-started).
 
 ## A full sample
 
