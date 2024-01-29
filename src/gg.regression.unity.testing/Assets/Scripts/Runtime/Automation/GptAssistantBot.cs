@@ -63,6 +63,9 @@ Be patient, but raise an exception if the game has not progressed after 5 or mor
         public OpenAICredentials openAiCredentials;
         public string openAiModel = "gpt-4-1106-preview";
 
+        [Tooltip("The maximum number of steps the bot is allowed to take before giving up. Set this to '0' to disable the iteration limit (NOT RECOMMENDED).")]
+        public int maximumIterations = 20;
+
         [TextArea(3, 10)]
         public string goal;
 
@@ -72,6 +75,7 @@ Be patient, but raise an exception if the game has not progressed after 5 or mor
         private bool m_Thinking;
         private OpenAIClient m_OpenAIClient;
         private readonly ChatCompletionsOptions m_Conversation = new();
+        private int m_IterationCount;
 
         public GptAssistantBot()
         {
@@ -109,7 +113,16 @@ Be patient, but raise an exception if the game has not progressed after 5 or mor
                 return;
             }
 
+            if(maximumIterations != 0 && m_IterationCount >= maximumIterations)
+            {
+                m_Log.Error($"Maximum iteration count of {maximumIterations} reached. Stopping bot.");
+                StopBot();
+                return;
+            }
+
             m_Thinking = true;
+
+            m_IterationCount++;
 
             try
             {
