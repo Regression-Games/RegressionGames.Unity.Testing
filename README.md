@@ -4,6 +4,8 @@ A Unity SDK to help you create automated tests for you game with minimal code.
 
 **Feedback wanted!** If you have feedback on the SDK, please let us know using our [feedback form](https://d7y6yysps34.typeform.com/to/o8U6FGtO).
 
+Have questions? [Join our Discord](https://discord.gg/925SYVse2H) to share your creations and get help from the community.
+
 ## Quick Start - Add the package
 
 In the Unity Editor, inside of **Window** > **Package Manager** > **+** > 
